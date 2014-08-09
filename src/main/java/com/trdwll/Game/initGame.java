@@ -1,5 +1,6 @@
 package com.trdwll.Game;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,8 @@ public class initGame extends JavaPlugin {
 			System.out.print(Utils.prefixError + "Error starting up!");
 		}
 
-        lobbies.add(new Lobby(this, GsonFileUtils.loadMapDetailsFromFile("DevArena.json", true)));
+        // lobbies.add(new Lobby(this, GsonFileUtils.loadMapDetailsFromFile("DevArena.json", true)));
+        lobbies.addAll(GsonFileUtils.loadAllLobbiesFromDirectory(new File(getDataFolder(), "MapDetails")));
 
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 138, 15, 247), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 205, 70, 298), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
