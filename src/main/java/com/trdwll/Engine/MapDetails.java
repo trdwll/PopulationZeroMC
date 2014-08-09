@@ -2,7 +2,6 @@ package com.trdwll.Engine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,6 +15,10 @@ public class MapDetails {
     private int startZombieSpawnCount;
     private int zombieIncrementalCount;
     private int maxZombieSpawnCount;
+    private int waveDuration;
+    private int wavesPerRound;
+    private int roundSpawnAddition;
+    private int maxRounds;
 
 	private LocationSerialized lobbySpawn;
 	private LocationSerialized gameSpawn; // TODO: Change to random locations in game
@@ -23,14 +26,18 @@ public class MapDetails {
 
     public MapDetails() { }
 
-    public MapDetails(int minPlayers, String mapName, int maxPlayers, boolean isZombieLocationSpread, int startZombieSpawnCount, int zombieIncrementalCount, int maxZombieSpawnCount, LocationSerialized lobbySpawn, LocationSerialized gameSpawn, List<LocationSerialized> zombieSpawnLocations) {
-        this.minPlayers = minPlayers;
+    public MapDetails(String mapName, int minPlayers, int maxPlayers, boolean isZombieLocationSpread, int startZombieSpawnCount, int zombieIncrementalCount, int maxZombieSpawnCount, int waveDuration, int wavesPerRound, int roundSpawnAddition, int maxRounds, LocationSerialized lobbySpawn, LocationSerialized gameSpawn, List<LocationSerialized> zombieSpawnLocations) {
         this.mapName = mapName;
+        this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
         this.isZombieLocationSpread = isZombieLocationSpread;
         this.startZombieSpawnCount = startZombieSpawnCount;
         this.zombieIncrementalCount = zombieIncrementalCount;
         this.maxZombieSpawnCount = maxZombieSpawnCount;
+        this.waveDuration = waveDuration;
+        this.wavesPerRound = wavesPerRound;
+        this.roundSpawnAddition = roundSpawnAddition;
+        this.maxRounds = maxRounds;
         this.lobbySpawn = lobbySpawn;
         this.gameSpawn = gameSpawn;
         this.zombieSpawnLocations = zombieSpawnLocations;
@@ -62,6 +69,22 @@ public class MapDetails {
 
     public int getMaxZombieSpawnCount() {
         return maxZombieSpawnCount;
+    }
+
+    public int getWaveDuration() {
+        return waveDuration;
+    }
+
+    public int getWavesPerRound() {
+        return wavesPerRound;
+    }
+
+    public int getRoundSpawnAddition() {
+        return roundSpawnAddition;
+    }
+
+    public int getMaxRounds() {
+        return maxRounds;
     }
 
     public Location getLobbySpawn() {

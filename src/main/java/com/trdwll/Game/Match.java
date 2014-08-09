@@ -47,13 +47,13 @@ public class Match {
 		
 		scheduleId = lobby.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(lobby.getPlugin(), new Runnable() {
 			
-			
+			int round = 1;
 			int wave = 1;
 			int zombieCount = details.getStartZombieSpawnCount();
 			
 			@Override
 			public void run() {
-				lobby.sendPlayersMessage(Utils.prefixDefault + " Wave " + wave + " Spawned!");
+				Utils.messageAll("Wave " + wave + " Inbound!", lobby);
 				
 				spawnWave(zombieCount);
 				
@@ -62,10 +62,13 @@ public class Match {
                 if (details.getMaxZombieSpawnCount() != -1 && zombieCount > details.getMaxZombieSpawnCount())
                     zombieCount = details.getMaxZombieSpawnCount();
 
+                if (wave % details.getWavesPerRound() == 0)
+                    Utils.messageAll("Round " + (++ round) + " Has Begun!", lobby);
+
 				wave ++;
 			}
 			
-		}, 0, 20 * 30);
+		}, 0, details.getWaveDuration() * 20);
 	}
 
 	public boolean hasPlayer(Player player) {
@@ -85,7 +88,7 @@ public class Match {
 			else
 				KitStorage.giveKit(player, 4);
 			
-			player.sendMessage(Utils.prefixDefault + " Have fun!");
+			Utils.message("Have Fun!", player);
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setHealth(20.0); 
 		}

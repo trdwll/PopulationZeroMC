@@ -35,7 +35,7 @@ public class initGame extends JavaPlugin {
 			System.out.print(Utils.prefixError + "Error starting up!");
 		}
 
-        devLobby = new Lobby(this, GsonFileUtils.loadMapDetailsFromFile("DevArena.json"));
+        devLobby = new Lobby(this, GsonFileUtils.loadMapDetailsFromFile("DevArena.json", true));
 
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 138, 15, 247), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 205, 70, 298), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
