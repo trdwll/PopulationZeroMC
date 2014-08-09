@@ -2,6 +2,8 @@ package com.trdwll.Utilities;
 
 
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
+import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
 import org.bukkit.entity.Player;
 
 public class Utils {
@@ -37,7 +39,21 @@ public class Utils {
 	public static double[] spawnPoint2 = {107.56087, 15.000, 252.69701};
 	public static double[] spawnPoint3 = {123.48725, 15.000, 252.59861};
 	public static double[] spawnPoint4 = {120.33968, 5.000, 237.05808};
-	
+
+    private static Gson gson;
+
+    static {
+        GsonBuilder builder = new GsonBuilder();
+
+        builder.setPrettyPrinting();
+
+        gson = builder.create();
+    }
+
+    public static Gson getGson() {
+        return gson;
+    }
+
 	public static String translate(String str) {
 		return ChatColor.translateAlternateColorCodes('&', str);
 	}

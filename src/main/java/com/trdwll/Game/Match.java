@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.trdwll.Engine.MapDetails;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -21,10 +22,8 @@ import com.trdwll.Utilities.Utils;
 @SuppressWarnings("unused")
 public class Match {
 
-	private static final int MIN_GAME_STOP_COUNT = 0;
-
 	private List<Player> players;
-	private MatchSpawnDetails spawnDetails;
+    private MapDetails details;
 	private Lobby lobby;
 	
 	private int scheduleId = -1;
@@ -34,11 +33,11 @@ public class Match {
 
 	private Random rand = new Random();
 
-	public Match(List<Player> players, MatchSpawnDetails spawnDetails, Lobby lobby) {
+	public Match(List<Player> players, MapDetails spawnDetails, Lobby lobby) {
 		this.players = players;
-		this.spawnDetails = spawnDetails;
+		this.details = details;
 		this.lobby = lobby;
-		this.zombieSpawnLocations = spawnDetails.getSpawnLocations();
+		this.zombieSpawnLocations = details.getZombieSpawnLocations();
 		this.spawnedZombies = new ArrayList<Zombie>();
 	}
 
@@ -50,7 +49,7 @@ public class Match {
 			
 			
 			int wave = 1;
-			int zombieCount = 16;
+			int zombieCount = details.getStartZombieSpawnCount();
 			
 			@Override
 			public void run() {
@@ -58,7 +57,11 @@ public class Match {
 				
 				spawnWave(zombieCount);
 				
-				zombieCount += 8;
+				zombieCount += details.getZombieIncrementalCount();
+
+                if (details.getMaxZombieSpawnCount() != -1 && zombieCount > details.getMaxZombieSpawnCount())
+                    zombieCount = details.getMaxZombieSpawnCount();
+
 				wave ++;
 			}
 			
@@ -73,7 +76,7 @@ public class Match {
 		if (hasPlayer(player)) {
 			// player.teleport(new Location(Bukkit.getWorld("world"), 135.39872, 15.000, 241.46764));
 			// player.teleport(new Location(Bukkit.getWorld("world"), 204, 70, 288));
-			player.teleport(spawnDetails.getRandomLocation());
+			player.teleport(details.getGameSpawn());
 			
 			clearInventory(player);
 			
@@ -112,8 +115,8 @@ public class Match {
 	}
 	
 	public void spawnWave(int zombieAmount) {
-		int zombiesPerSpawn = zombieAmount / zombieSpawnLocations.size();
-		
+		int zombiesPerSpawn = details.isZombieLocationSpread() ? zombieAmount / zombieSpawnLocations.size() : zombieAmount;
+
 		for (Location l : zombieSpawnLocations) {
 			for (int ignored = 0; ignored < zombiesPerSpawn; ignored ++) 
 				spawnedZombies.add(l.getWorld().spawn(l, Zombie.class));

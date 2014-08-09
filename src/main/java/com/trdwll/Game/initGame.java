@@ -3,6 +3,7 @@ package com.trdwll.Game;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.trdwll.Utilities.GsonFileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -19,10 +20,11 @@ import com.trdwll.Utilities.Utils;
 public class initGame extends JavaPlugin {
 	
 	public Location spawn;
-	private Lobby lobbyOne;
-	private Lobby area51;
+	private Lobby devLobby;
 	
 	public void onEnable() {
+        GsonFileUtils.setPlugin(this);
+
 		spawn = new Location(getServer().getWorld("world"), 122, 69, 251);
 		
 		try {
@@ -32,11 +34,13 @@ public class initGame extends JavaPlugin {
 		catch (Exception e) {
 			System.out.print(Utils.prefixError + "Error starting up!");
 		}
-		
+
+        devLobby = new Lobby(this, GsonFileUtils.loadMapDetailsFromFile("DevArena.json"));
+
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 138, 15, 247), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 205, 70, 298), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
 		
-		List<Location> locations = new ArrayList<Location>();
+		/* List<Location> locations = new ArrayList<Location>();
 		List<Location> location = new ArrayList<Location>();
 		locations.add(new Location(Bukkit.getWorld("world"), 192, 70, 298));
 		locations.add(new Location(Bukkit.getWorld("world"), 191, 69, 291));
@@ -45,13 +49,14 @@ public class initGame extends JavaPlugin {
 		location.add(new Location(Bukkit.getWorld("world"), -511, 62, 2682));
 		location.add(new Location(Bukkit.getWorld("world"), -501, 62, 2658));
 		location.add(new Location(Bukkit.getWorld("world"), -463, 62, 2651));
+		location.add(new Location(Bukkit.getWorld("world"), -463, 62, 2651));
 		location.add(new Location(Bukkit.getWorld("world"), -457, 62, 2677));
 		location.add(new Location(Bukkit.getWorld("world"), -449, 63, 2696));
 		
 		lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 205, 70, 298), new Location(getServer().getWorld("world"), 204, 70, 288), locations);
 		
 		// lobby = new Lobby(this, <lobby spawn>, (<game spawn>), (<list of zombie spawns>));
-		area51 = new Lobby(this, new Location(getServer().getWorld("world"), -486, 109, 2741), new Location(getServer().getWorld("world"), -497, 62, 2726), location);
+		area51 = new Lobby(this, new Location(getServer().getWorld("world"), -486, 109, 2741), new Location(getServer().getWorld("world"), -497, 62, 2726), location); */
 		
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			
@@ -78,26 +83,27 @@ public class initGame extends JavaPlugin {
 				sender.sendMessage("join message & code to join match (call from engine class)");
 				
 				if (args[1].equalsIgnoreCase("one")) {
-					if (lobbyOne.canPlayerJoin())
-						lobbyOne.addPlayerToLobby(player);
+					if (devLobby.canPlayerJoin())
+                        devLobby.addPlayerToLobby(player);
 					else
 						player.sendMessage(Utils.prefixWarn + "Test Lobby is full!");
 				}
-				else if (args[1].equalsIgnoreCase("area51")) {
+				/* else if (args[1].equalsIgnoreCase("area51")) {
 					if (area51.canPlayerJoin())
 						area51.addPlayerToLobby(player);
 					else
 						player.sendMessage(Utils.prefixWarn + "Area51 Lobby is full!");
-				}
+				} */
 				//initEngine.joinMatch(player, new Location(player.getLocation().getWorld(), 138.84793, 15.000, 247.12367));
 			}
 			else if (args.length >= 1 && args[0].equalsIgnoreCase("leave") && sender.hasPermission("pzm.leave")) {
 				sender.sendMessage("leave message + code to leave match (call from engine class)");
-		
-				lobbyOne.removePlayerFromLobby(player);
-				area51.removePlayerFromLobby(player);
+
+                devLobby.removePlayerFromLobby(player);
+				// lobbyOne.removePlayerFromLobby(player);
+				// area51.removePlayerFromLobby(player);
 				// lobby<whatever>.removePlayerFromLobby(player);
-				
+
 			}
 		
 			// KITS

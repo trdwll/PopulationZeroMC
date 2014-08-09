@@ -1,0 +1,33 @@
+{
+    "mapName": "Dev Arena";
+
+    "minPlayers": 1;
+    "maxPlayers": 5;
+
+    "isZombieLocationSpread": true;
+    "startZombieSpawnCount": 16;
+    "zombieIncrementalCount": 8,
+    "maxZombieSpawnCount": -1;
+
+    "lobbySpawn": {
+        "world": "world";
+        "x": 2387,
+        "y": 4,
+        "z": -263
+    },
+    "gameSpawn": {
+        "world": "world";
+        "x": 2368,
+        "y": 4,
+        "z": 263
+    },
+
+    "zombieSpawnLocations": [
+        {
+           "world": "world";
+           "x": 2386,
+           "y": 4,
+           "z": -281
+        }
+    ]
+}

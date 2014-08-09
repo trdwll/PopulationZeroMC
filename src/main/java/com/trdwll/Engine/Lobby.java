@@ -18,47 +18,37 @@ import com.trdwll.Utilities.Utils;
 
 public class Lobby implements Listener {
 
-	private static final int MIN_LOBBY_COUNT = 1;
-	private static final int MAX_LOBBY_COUNT = 5;
-
 	private initGame plugin;
-	private Location spawnLocation;
-	private MatchSpawnDetails spawnDetails;
 	private List<Player> players;
 	private LobbyState lobbyState;
+    private MapDetails details;
 
 	private int scheduleId = -1;
 	private int countdownId = -1;
 	private Match match;
 
-	public Lobby(initGame plugin, Location spawnLocation, World world, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+	public Lobby(initGame plugin, MapDetails details) {
 		this.plugin = plugin;
-		this.spawnLocation = spawnLocation;
-		this.spawnDetails = new MatchSpawnDetails(world, minX, minY, minZ, maxX, maxY, maxZ);
 		this.players = new ArrayList<Player>();
 		this.lobbyState = LobbyState.PRE_GAME;
-
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-	}
-
-	public Lobby(initGame plugin, Location spawnLocation, Location location, List<Location> zombieSpawnLocations) {
-		this.plugin = plugin;
-		this.spawnLocation = spawnLocation;
-		this.spawnDetails = new MatchSpawnDetails(location, zombieSpawnLocations);
-		this.players = new ArrayList<Player>();
-		this.lobbyState = LobbyState.PRE_GAME;
+        this.details = details;
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	public Location getLocation() {
-		return spawnLocation;
+		return details.getLobbySpawn();
 	}
+
+    public MapDetails getDetails() {
+        return details;
+    }
 
 	public void addPlayerToLobby(Player player) {
 		if (!players.contains(player)) {
 			players.add(player);
-			player.teleport(spawnLocation);
+			player.teleport(getLocation());
+
 			checkLobbyStatus();
 		}
 	}
@@ -84,12 +74,12 @@ public class Lobby implements Listener {
 	}
 
 	public boolean canPlayerJoin() {
-		return getLobbyState() != LobbyState.IN_GAME && players.size() < MAX_LOBBY_COUNT;
+		return getLobbyState() != LobbyState.IN_GAME && players.size() < details.getMaxPlayers();
 	}
 
 	public void checkLobbyStatus() {
-		if (players.size() >= MIN_LOBBY_COUNT && getLobbyState() == LobbyState.PRE_GAME) {
-			match = new Match(players, spawnDetails, this);
+		if (players.size() >= details.getMinPlayers() && getLobbyState() == LobbyState.PRE_GAME) {
+			match = new Match(players, details, this);
 
 			setLobbyState(LobbyState.COUNTDOWN);
 
