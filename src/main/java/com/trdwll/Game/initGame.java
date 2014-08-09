@@ -25,7 +25,7 @@ public class initGame extends JavaPlugin {
 	public void onEnable() {
         GsonFileUtils.setPlugin(this);
 
-		spawn = new Location(getServer().getWorld("world"), 122, 69, 251);
+		spawn = new Location(getServer().getWorld("world"), 2326, 36, -235);
 		
 		try {
 			this.getServer().getPluginManager().registerEvents(new initEngine(this), this);	

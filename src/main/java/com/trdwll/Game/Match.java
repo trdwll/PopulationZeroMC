@@ -33,7 +33,7 @@ public class Match {
 
 	private Random rand = new Random();
 
-	public Match(List<Player> players, MapDetails spawnDetails, Lobby lobby) {
+	public Match(List<Player> players, MapDetails details, Lobby lobby) {
 		this.players = players;
 		this.details = details;
 		this.lobby = lobby;
