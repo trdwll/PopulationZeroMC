@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.trdwll.Engine.MapDetails;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.trdwll.Engine.KitStorage;
 import com.trdwll.Engine.Lobby;
-import com.trdwll.Engine.MatchSpawnDetails;
 import com.trdwll.Utilities.Utils;
 
 @SuppressWarnings("unused")
@@ -53,7 +51,6 @@ public class Match {
 			
 			@Override
 			public void run() {
-				Utils.messageAll("Wave " + wave + " Inbound!", lobby);
 				
 				spawnWave(zombieCount);
 				
@@ -62,10 +59,12 @@ public class Match {
                 if (details.getMaxZombieSpawnCount() != -1 && zombieCount > details.getMaxZombieSpawnCount())
                     zombieCount = details.getMaxZombieSpawnCount();
 
-                if (wave % details.getWavesPerRound() == 0)
-                    Utils.messageAll("Round " + (++ round) + " Has Begun!", lobby);
-
 				wave ++;
+
+                if (wave % details.getWavesPerRound() == 0 || wave == 2)
+                    Utils.messageAll("Round " + (round ++) + " Has Begun!", lobby);
+
+                Utils.messageAll("Wave " + (wave - 1) + " Inbound!", lobby);
 			}
 			
 		}, 0, details.getWaveDuration() * 20);

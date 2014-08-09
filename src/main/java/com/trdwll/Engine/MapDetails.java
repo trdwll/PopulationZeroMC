@@ -21,12 +21,12 @@ public class MapDetails {
     private int maxRounds;
 
 	private LocationSerialized lobbySpawn;
-	private LocationSerialized gameSpawn; // TODO: Change to random locations in game
+	private LocationSerialized playerSpawn; // TODO: Change to random locations in game
 	private List<LocationSerialized> zombieSpawnLocations;
 
     public MapDetails() { }
 
-    public MapDetails(String mapName, int minPlayers, int maxPlayers, boolean isZombieLocationSpread, int startZombieSpawnCount, int zombieIncrementalCount, int maxZombieSpawnCount, int waveDuration, int wavesPerRound, int roundSpawnAddition, int maxRounds, LocationSerialized lobbySpawn, LocationSerialized gameSpawn, List<LocationSerialized> zombieSpawnLocations) {
+    public MapDetails(String mapName, int minPlayers, int maxPlayers, boolean isZombieLocationSpread, int startZombieSpawnCount, int zombieIncrementalCount, int maxZombieSpawnCount, int waveDuration, int wavesPerRound, int roundSpawnAddition, int maxRounds, LocationSerialized lobbySpawn, LocationSerialized playerSpawn, List<LocationSerialized> zombieSpawnLocations) {
         this.mapName = mapName;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -39,7 +39,7 @@ public class MapDetails {
         this.roundSpawnAddition = roundSpawnAddition;
         this.maxRounds = maxRounds;
         this.lobbySpawn = lobbySpawn;
-        this.gameSpawn = gameSpawn;
+        this.playerSpawn = playerSpawn;
         this.zombieSpawnLocations = zombieSpawnLocations;
     }
 
@@ -92,7 +92,7 @@ public class MapDetails {
     }
 
     public Location getGameSpawn() {
-        return gameSpawn.getLocation();
+        return playerSpawn.getLocation();
     }
 
     public List<Location> getZombieSpawnLocations() {
@@ -109,15 +109,15 @@ public class MapDetails {
 		
 		private double x, y, z;
 		private String world;
-		
-		public LocationSerialized(Location location) {
-			this.x = location.getX();
-			this.y = location.getY();
-			this.z = location.getZ();
-			this.world = location.getWorld().getName();
-		}
-		
-		public Location getLocation() {
+
+        public LocationSerialized(Location location) {
+            this.x = location.getX();
+            this.y = location.getY();
+            this.z = location.getZ();
+            this.world = location.getWorld().getName();
+        }
+
+        public Location getLocation() {
 			return Bukkit.getWorld(world) != null ? new Location(Bukkit.getWorld(world), x, y, z) : null;
 		}
 	}

@@ -20,11 +20,12 @@ import com.trdwll.Utilities.Utils;
 public class initGame extends JavaPlugin {
 	
 	public Location spawn;
-	private Lobby devLobby;
-	
+	private List<Lobby> lobbies;
+
 	public void onEnable() {
         GsonFileUtils.setPlugin(this);
 
+        lobbies = new ArrayList<Lobby>();
 		spawn = new Location(getServer().getWorld("world"), 2326, 36, -235);
 		
 		try {
@@ -35,7 +36,7 @@ public class initGame extends JavaPlugin {
 			System.out.print(Utils.prefixError + "Error starting up!");
 		}
 
-        devLobby = new Lobby(this, GsonFileUtils.loadMapDetailsFromFile("DevArena.json", true));
+        lobbies.add(new Lobby(this, GsonFileUtils.loadMapDetailsFromFile("DevArena.json", true)));
 
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 138, 15, 247), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 205, 70, 298), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
@@ -44,7 +45,7 @@ public class initGame extends JavaPlugin {
 		List<Location> location = new ArrayList<Location>();
 		locations.add(new Location(Bukkit.getWorld("world"), 192, 70, 298));
 		locations.add(new Location(Bukkit.getWorld("world"), 191, 69, 291));
-		
+
 		location.add(new Location(Bukkit.getWorld("world"), -508, 62, 2700));
 		location.add(new Location(Bukkit.getWorld("world"), -511, 62, 2682));
 		location.add(new Location(Bukkit.getWorld("world"), -501, 62, 2658));
@@ -52,9 +53,9 @@ public class initGame extends JavaPlugin {
 		location.add(new Location(Bukkit.getWorld("world"), -463, 62, 2651));
 		location.add(new Location(Bukkit.getWorld("world"), -457, 62, 2677));
 		location.add(new Location(Bukkit.getWorld("world"), -449, 63, 2696));
-		
+
 		lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 205, 70, 298), new Location(getServer().getWorld("world"), 204, 70, 288), locations);
-		
+
 		// lobby = new Lobby(this, <lobby spawn>, (<game spawn>), (<list of zombie spawns>));
 		area51 = new Lobby(this, new Location(getServer().getWorld("world"), -486, 109, 2741), new Location(getServer().getWorld("world"), -497, 62, 2726), location); */
 		
@@ -82,12 +83,30 @@ public class initGame extends JavaPlugin {
 			else if (args.length == 2 && args[0].equalsIgnoreCase("join") && sender.hasPermission("pzm.join")) {
 				sender.sendMessage("join message & code to join match (call from engine class)");
 				
-				if (args[1].equalsIgnoreCase("one")) {
-					if (devLobby.canPlayerJoin())
-                        devLobby.addPlayerToLobby(player);
-					else
-						player.sendMessage(Utils.prefixWarn + "Test Lobby is full!");
-				}
+				if (lobbies.size() > 0) {
+                    int i;
+
+                    try {
+                        i = Integer.valueOf(args[1]);
+                    } catch (NumberFormatException e) {
+                        Utils.message(Utils.PrefixType.ERROR, "Invalid Lobby ID!", player);
+
+                        return true;
+                    }
+
+                    if (i > 0 && i < lobbies.size()) {
+                        Utils.message(Utils.PrefixType.DEFAULT, "Joining Lobby for Map: " + lobbies.get(i - 1), player);
+
+                        if (lobbies.get(i - 1).canPlayerJoin())
+                            lobbies.get(i - 1).addPlayerToLobby(player);
+                        else
+                            player.sendMessage(Utils.prefixWarn + "Lobby for Map: " + lobbies.get(i - 1).getDetails().getMapName() + " - is full!");
+                    } else {
+                        Utils.message(Utils.PrefixType.ERROR, "Invalid Lobby ID!", player);
+                    }
+                } else {
+                    Utils.message(Utils.PrefixType.ERROR, "There are no lobbies available!", player);
+                }
 				/* else if (args[1].equalsIgnoreCase("area51")) {
 					if (area51.canPlayerJoin())
 						area51.addPlayerToLobby(player);
@@ -99,7 +118,8 @@ public class initGame extends JavaPlugin {
 			else if (args.length >= 1 && args[0].equalsIgnoreCase("leave") && sender.hasPermission("pzm.leave")) {
 				sender.sendMessage("leave message + code to leave match (call from engine class)");
 
-                devLobby.removePlayerFromLobby(player);
+                for (Lobby lobby : lobbies)
+                    lobby.removePlayerFromLobby(player);
 				// lobbyOne.removePlayerFromLobby(player);
 				// area51.removePlayerFromLobby(player);
 				// lobby<whatever>.removePlayerFromLobby(player);
