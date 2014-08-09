@@ -94,13 +94,15 @@ public class initGame extends JavaPlugin {
                         return true;
                     }
 
-                    if (i > 0 && i < lobbies.size()) {
-                        Utils.message(Utils.PrefixType.DEFAULT, "Joining Lobby for Map: " + lobbies.get(i - 1), player);
+                    if (lobbies.get(i - 1) != null) {
+                        Lobby lobby = lobbies.get(i - 1);
 
-                        if (lobbies.get(i - 1).canPlayerJoin())
-                            lobbies.get(i - 1).addPlayerToLobby(player);
+                        Utils.message(Utils.PrefixType.DEFAULT, "Joining Lobby for Map: " + lobby.getDetails().getMapName(), player);
+
+                        if (lobby.canPlayerJoin())
+                            lobby.addPlayerToLobby(player);
                         else
-                            player.sendMessage(Utils.prefixWarn + "Lobby for Map: " + lobbies.get(i - 1).getDetails().getMapName() + " - is full!");
+                            player.sendMessage(Utils.prefixWarn + "Lobby for Map: " + lobby.getDetails().getMapName() + " - is full!");
                     } else {
                         Utils.message(Utils.PrefixType.ERROR, "Invalid Lobby ID!", player);
                     }

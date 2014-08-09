@@ -47,24 +47,28 @@ public class Match {
 			
 			int round = 1;
 			int wave = 1;
+            int roundAddition = 0;
+
 			int zombieCount = details.getStartZombieSpawnCount();
 			
 			@Override
 			public void run() {
-				
-				spawnWave(zombieCount);
-				
-				zombieCount += details.getZombieIncrementalCount();
+
+                if (wave % details.getWavesPerRound() == 0 || wave == 1) {
+                    Utils.messageAll("Round " + (round++) + " Has Begun!", lobby);
+
+                    roundAddition += details.getRoundSpawnAddition();
+                    zombieCount += roundAddition;
+                }
 
                 if (details.getMaxZombieSpawnCount() != -1 && zombieCount > details.getMaxZombieSpawnCount())
                     zombieCount = details.getMaxZombieSpawnCount();
 
-				wave ++;
+                spawnWave(zombieCount);
 
-                if (wave % details.getWavesPerRound() == 0 || wave == 2)
-                    Utils.messageAll("Round " + (round ++) + " Has Begun!", lobby);
+                zombieCount += details.getZombieIncrementalCount();
 
-                Utils.messageAll("Wave " + (wave - 1) + " Inbound!", lobby);
+                Utils.messageAll("Wave " + (wave ++) + " Inbound!", lobby);
 			}
 			
 		}, 0, details.getWaveDuration() * 20);

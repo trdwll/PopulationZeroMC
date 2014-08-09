@@ -43,7 +43,7 @@ public class Utils {
     }
 
     public static void message(PrefixType prefixType, String message, Player player) {
-        player.sendMessage(prefixType.getPrefix() + message);
+        player.sendMessage(translate(prefixType.getPrefix() + message));
     }
 
     public static void messageAll(String message, Lobby lobby) {
@@ -51,7 +51,7 @@ public class Utils {
     }
 
     public static void messageAll(PrefixType prefixType, String message, Lobby lobby) {
-        lobby.sendPlayersMessage(prefixType.getPrefix() + message);
+        lobby.sendPlayersMessage(translate(prefixType.getPrefix() + message));
     }
 
 	public static void defaultMessage(Player player, String string) {
@@ -80,7 +80,7 @@ public class Utils {
         OK("&f[&2PZM&f] "),
         WARN("&f[&ePZM&f] "),
         ERROR("&f[&4PZM&f] "),
-        DEEBUG("&f[&4DEBUG&f] ");
+        DEBUG("&f[&4DEBUG&f] ");
 
         private String prefix;
 

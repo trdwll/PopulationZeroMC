@@ -20,7 +20,7 @@
         "y": 4,
         "z": -263
     },
-    "gameSpawn": {
+    "playerSpawn": {
         "world": "world";
         "x": 2368,
         "y": 4,
