@@ -78,7 +78,7 @@ public class Lobby implements Listener {
 	}
 
 	public void checkLobbyStatus() {
-		if (players.size() >= details.getMinPlayers() && getLobbyState() == LobbyState.PRE_GAME) {
+		if (players.size() >= details.getMinPlayers() && getLobbyState() == LobbyState.PRE_GAME && match == null) {
 			match = new Match(players, details, this);
 
 			setLobbyState(LobbyState.COUNTDOWN);
@@ -87,10 +87,13 @@ public class Lobby implements Listener {
 
 				@Override
 				public void run() {
-					match.startGame();
-					plugin.getServer().getScheduler().cancelTask(countdownId);
+                    if (match != null) {
+                        match.startGame();
 
-					setLobbyState(LobbyState.IN_GAME);
+                        setLobbyState(LobbyState.IN_GAME);
+                    }
+
+                    plugin.getServer().getScheduler().cancelTask(countdownId);
 				}
 
 			}, 200);
@@ -101,10 +104,13 @@ public class Lobby implements Listener {
 
 				@Override
 				public void run() {
-					for (Player p : players)
-						p.sendMessage(Utils.prefixDefault + " " + count + " SECONDS TILL START!");
+					if (match != null) {
+                        for (Player p : players)
+                            p.sendMessage(Utils.prefixDefault + " " + count + " SECONDS TILL START!");
 
-					count --;
+                        count --;
+                    } else
+                        plugin.getServer().getScheduler().cancelTask(countdownId);
 				}
 
 			}, 0, 20);
@@ -117,6 +123,8 @@ public class Lobby implements Listener {
 
 		sendPlayersMessage(Utils.prefixWarn + " Cancelled game!");
 		setLobbyState(LobbyState.PRE_GAME);
+
+        match = null;
 	}
 
 	@EventHandler (priority = EventPriority.HIGHEST)
