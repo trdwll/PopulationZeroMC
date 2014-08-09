@@ -31,6 +31,8 @@ public class Utils {
 	// 107.56087, 15.000, 252.69701
 	// 123.48725, 15.000, 252.59861
 	// 120.33968, 5.000, 237.05808
+
+    // test message
 	public static double[] spawnPoint1 = {135.39872, 15.000, 241.46764};
 	public static double[] spawnPoint2 = {107.56087, 15.000, 252.69701};
 	public static double[] spawnPoint3 = {123.48725, 15.000, 252.59861};
