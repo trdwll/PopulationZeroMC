@@ -1,0 +1,10 @@
+name: Population_Zero_Mod
+main: com.trdwll.Game.initGame
+version: 0.1
+
+commands:
+   pzm:
+      description: PZM
+      usage: /<command> 
+      permission: pzm
+      permission-message: You don't have <permission>
