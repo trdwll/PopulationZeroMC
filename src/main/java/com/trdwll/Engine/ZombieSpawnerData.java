@@ -16,8 +16,6 @@ public class ZombieSpawnerData extends LocationSerialized {
         this.isPigZombie = isPigZombie;
     }
 
-    // Hai
-
     public Zombie spawnZombie() {
         Zombie zombie = isPigZombie ? getLocation().getWorld().spawn(getLocation(), PigZombie.class) : getLocation().getWorld().spawn(getLocation(), Zombie.class);
 

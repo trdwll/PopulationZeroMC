@@ -3,9 +3,11 @@ package com.trdwll.Utilities;
 
 import com.trdwll.Engine.Lobby;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class Utils {
 	public static String Version = "0.1";
@@ -73,6 +75,11 @@ public class Utils {
 	public static void debugMessage(Player player, String string) {
 		player.sendMessage(prefixDebug + " " + string);
 	}
+
+    public static void clearInventory(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[] { new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR) });
+    }
 
     public enum PrefixType {
 

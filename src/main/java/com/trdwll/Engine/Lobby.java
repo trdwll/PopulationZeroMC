@@ -1,195 +1,157 @@
 package com.trdwll.Engine;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-
 import com.trdwll.Game.Match;
 import com.trdwll.Game.initGame;
 import com.trdwll.Utilities.Utils;
+import org.bukkit.entity.Player;
 
-public class Lobby implements Listener {
+import java.util.ArrayList;
+import java.util.List;
 
-	private initGame plugin;
-	private List<Player> players;
-	private LobbyState lobbyState;
-    private MapDetails details;
+public class Lobby {
 
-	private int scheduleId = -1;
-	private int countdownId = -1;
-	private Match match;
+    private initGame plugin;
 
-	public Lobby(initGame plugin, MapDetails details) {
-		this.plugin = plugin;
-		this.players = new ArrayList<Player>();
-		this.lobbyState = LobbyState.PRE_GAME;
-        this.details = details;
+    private List<Player> lobbyPlayers;
+    private Lobby.LobbyState lobbyState;
+    private MapDetails mapDetails;
 
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-	}
+    private Match match;
 
-	public Location getLocation() {
-		return details.getLobbySpawn();
-	}
+    private int scheduleId;
+    private int countdownId;
 
-    public MapDetails getDetails() {
-        return details;
+    public Lobby(initGame plugin, MapDetails mapDetails) {
+        this.plugin = plugin;
+        this.mapDetails = mapDetails;
+        this.lobbyPlayers = new ArrayList<Player>();
+        this.lobbyState = Lobby.LobbyState.PRE_GAME;
     }
 
-	public void addPlayerToLobby(Player player) {
-		if (!players.contains(player)) {
-			players.add(player);
-			player.teleport(getLocation());
+    public initGame getPlugin() {
+        return plugin;
+    }
 
-			checkLobbyStatus();
-		}
-	}
+    public void setLobbyState(Lobby.LobbyState lobbyState) {
+        this.lobbyState = lobbyState;
+    }
 
-	public void removePlayerFromLobby(Player player) {
-		if (match != null)
-			match.removePlayerFromGame(player);
+    public Lobby.LobbyState getLobbyState() {
+        return lobbyState;
+    }
 
-		if (players.contains(player)) {
-			players.remove(player);
+    public MapDetails getMapDetails() {
+        return mapDetails;
+    }
 
-			player.teleport(plugin.spawn);
-			player.sendMessage(Utils.prefixDebug + " Tp'd to spawn");
-		}
-	}
+    public List<Player> getLobbyPlayers() {
+        return lobbyPlayers;
+    }
 
-	public void setLobbyState(LobbyState lobbyState) {
-		this.lobbyState = lobbyState;
-	}
+    public boolean canPlayerJoin() {
+        return getLobbyState() != Lobby.LobbyState.IN_GAME && getLobbyPlayers().size() < getMapDetails().getMaxPlayers();
+    }
 
-	public LobbyState getLobbyState() {
-		return lobbyState;
-	}
+    public boolean addPlayerToLobby(Player player) {
+        if (canPlayerJoin() && !getLobbyPlayers().contains(player)) {
+            getLobbyPlayers().add(player);
 
-	public boolean canPlayerJoin() {
-		return getLobbyState() != LobbyState.IN_GAME && players.size() < details.getMaxPlayers();
-	}
+            player.teleport(getMapDetails().getLobbySpawn());
+            checkLobbyStatus();
 
-	public void checkLobbyStatus() {
-		if (players.size() >= details.getMinPlayers() && getLobbyState() == LobbyState.PRE_GAME && match == null) {
-			match = new Match(players, details, this);
+            return true;
+        }
 
-			setLobbyState(LobbyState.COUNTDOWN);
+        return false;
+    }
 
-			scheduleId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+    public boolean removePlayerFromLobby(Player player) {
+        if (getLobbyPlayers().contains(player)) {
+            getLobbyPlayers().remove(player);
 
-				@Override
-				public void run() {
-                    if (match != null) {
-                        match.startGame();
+            if (match != null)
+                Utils.clearInventory(player);
 
-                        setLobbyState(LobbyState.IN_GAME);
-                    }
+            player.teleport(getPlugin().spawn);
+            Utils.message(Utils.PrefixType.DEBUG, "Tp'd to Spawn!", player);
+            checkLobbyStatus();
 
-                    plugin.getServer().getScheduler().cancelTask(countdownId);
-				}
+            return true;
+        }
 
-			}, 200);
+        return false;
+    }
 
-			countdownId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+    public void sendPlayersMessage(String message) {
+        for (Player lobbyPlayer : getLobbyPlayers())
+            Utils.message(message, lobbyPlayer);
+    }
 
-				int count = 10;
+    public void sendPlayersMessage(Utils.PrefixType prefixType, String message) {
+        for (Player lobbyPlayer : getLobbyPlayers())
+            Utils.message(prefixType, message, lobbyPlayer);
+    }
 
-				@Override
-				public void run() {
-					if (match != null) {
-                        for (Player p : players)
-                            p.sendMessage(Utils.prefixDefault + " " + count + " SECONDS TILL START!");
+    private void checkLobbyStatus() {
+        if (lobbyPlayers.size() >= getMapDetails().getMinPlayers() && getLobbyState() == Lobby.LobbyState.PRE_GAME) {
+            match = new Match(this);
 
-                        count --;
-                    } else
-                        plugin.getServer().getScheduler().cancelTask(countdownId);
-				}
+            setLobbyState(Lobby.LobbyState.COUNTDOWN);
 
-			}, 0, 20);
-		}
-	}
+            countdownId = getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(getPlugin(), new Runnable() {
 
-	public void cancelCountdown() {
-		plugin.getServer().getScheduler().cancelTask(scheduleId);
-		plugin.getServer().getScheduler().cancelTask(countdownId);
+                private int countdown = 10;
 
-		sendPlayersMessage(Utils.prefixWarn + " Cancelled game!");
-		setLobbyState(LobbyState.PRE_GAME);
+                @Override
+                public void run() {
+                    if (match != null && countdown > 0)
+                        sendPlayersMessage((countdown --) + " SECONDS TILL START!");
+                    else
+                        getPlugin().getServer().getScheduler().cancelTask(countdownId);
+                }
 
-        match = null;
-	}
+            }, 0, 20);
 
-	@EventHandler (priority = EventPriority.HIGHEST)
-	public void onPlayerLeave(PlayerQuitEvent event) {
-		if (players.contains(event.getPlayer())) {
-			players.remove(event.getPlayer());
+            scheduleId = getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
 
-			if (getLobbyState() == LobbyState.COUNTDOWN) 
-				cancelCountdown();
-		}
+                @Override
+                public void run() {
+                    if (match != null && !match.hasStarted())
+                        match.startMatch();
+                    else
+                        getPlugin().getServer().getScheduler().cancelTask(scheduleId);
+                }
 
-		if (match != null)
-			match.removePlayerFromGame(event.getPlayer());
-	}
+            }, 200);
+        } else if (getLobbyPlayers().size() < getMapDetails().getMinPlayers() && getLobbyState() != Lobby.LobbyState.PRE_GAME) {
+            endMatch();
+        }
+    }
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerDeath(PlayerDeathEvent event) {
-		if (match != null && match.hasPlayer(event.getEntity()))
-			match.onPlayerDeath(event.getEntity(), event);
-	}
+    private void cancelSchedules() {
+        getPlugin().getServer().getScheduler().cancelTask(scheduleId);
+        getPlugin().getServer().getScheduler().cancelTask(countdownId);
+    }
 
-	public void sendPlayersMessage(String message) {
-		for (Player p : players)
-			p.sendMessage(message);
-	}
+    private void endMatch() {
+        if (match != null) {
+            setLobbyState(Lobby.LobbyState.PRE_GAME);
 
-	public initGame getPlugin() {
-		return plugin;
-	}
+            cancelSchedules();
 
-	public void reset() {
-		match = null;
+            for (Player matchPlayer : getLobbyPlayers())
+                removePlayerFromLobby(matchPlayer);
 
-		for (Player p : players) {
-			if (p.isOnline())
-				removePlayerFromLobby(p);
-		}
+            match.endMatch();
 
-		players.clear();
+            match = null;
+        }
+    }
 
-		setLobbyState(LobbyState.PRE_GAME);
-	}
+    public enum LobbyState {
 
-	public enum LobbyState {
+        PRE_GAME, COUNTDOWN, IN_GAME;
 
-		PRE_GAME, COUNTDOWN, IN_GAME;
-
-	}
-
-	/* public enum Kit {
-
-		NOOB, ELITE, SHIT;
-
-		private List<ItemStack> items;
-
-		private Kit(ItemStack... items) {
-			// items = Arrays.asList(items);
-		}
-
-		public void addItemsToPlayer(Player player) {
-			for (ItemStack item : items) {
-				player.getInventory().addItem(item);
-			}
-		}
-
-	} */
+    }
 
 }

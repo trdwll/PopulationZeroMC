@@ -27,7 +27,7 @@ public class initGame extends JavaPlugin {
         GsonFileUtils.setPlugin(this);
 
         lobbies = new ArrayList<Lobby>();
-		spawn = new Location(getServer().getWorld("world"), 2326, 36, -235);
+		spawn = new Location(getServer().getWorld("world"), 0, 36, 0);
 		
 		try {
 			this.getServer().getPluginManager().registerEvents(new initEngine(this), this);	
@@ -99,12 +99,12 @@ public class initGame extends JavaPlugin {
                     if (lobbies.get(i - 1) != null) {
                         Lobby lobby = lobbies.get(i - 1);
 
-                        Utils.message(Utils.PrefixType.DEFAULT, "Joining Lobby for Map: " + lobby.getDetails().getMapName(), player);
+                        Utils.message(Utils.PrefixType.DEFAULT, "Joining Lobby for Map: " + lobby.getMapDetails().getMapName(), player);
 
                         if (lobby.canPlayerJoin())
                             lobby.addPlayerToLobby(player);
                         else
-                            player.sendMessage(Utils.prefixWarn + "Lobby for Map: " + lobby.getDetails().getMapName() + " - is full!");
+                            player.sendMessage(Utils.prefixWarn + "Lobby is full for Map: " + lobby.getMapDetails().getMapName());
                     } else {
                         Utils.message(Utils.PrefixType.ERROR, "Invalid Lobby ID!", player);
                     }

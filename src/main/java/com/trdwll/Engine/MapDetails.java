@@ -96,13 +96,7 @@ public class MapDetails {
     }
 
     public List<ZombieSpawnerData> getZombieSpawnData() {
-        List<ZombieSpawnerData> spawnData = new ArrayList<ZombieSpawnerData>();
-
-        for (ZombieSpawnerData data : zombieSpawnData) {
-            spawnData.add(data);
-        }
-
-        return spawnData;
+        return zombieSpawnData;
     }
 	
 }
