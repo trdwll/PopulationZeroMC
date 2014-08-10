@@ -86,10 +86,10 @@ public class Match {
 			
 			clearInventory(player);
 			
-			if (!player.hasPermission("pzm.kit.dev"))
+			//if (!player.hasPermission("pzm.kit.dev"))
 				KitStorage.giveKit(player, rand.nextInt(3));
-			else
-				KitStorage.giveKit(player, 4);
+			//else
+				//KitStorage.giveKit(player, 4);
 			
 			Utils.message("Have Fun!", player);
 			player.setGameMode(GameMode.ADVENTURE);
