@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.trdwll.Engine.MapDetails;
+import com.trdwll.Engine.ZombieSpawnerData;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,7 +27,7 @@ public class Match {
 	
 	private int scheduleId = -1;
 	
-	private List<Location> zombieSpawnLocations;
+	private List<ZombieSpawnerData> zombieSpawnData;
 	private List<Zombie> spawnedZombies;
 
 	private Random rand = new Random();
@@ -35,7 +36,6 @@ public class Match {
 		this.players = players;
 		this.details = details;
 		this.lobby = lobby;
-		this.zombieSpawnLocations = details.getZombieSpawnLocations();
 		this.spawnedZombies = new ArrayList<Zombie>();
 	}
 
@@ -121,11 +121,11 @@ public class Match {
 	}
 	
 	public void spawnWave(int zombieAmount) {
-		int zombiesPerSpawn = details.isZombieLocationSpread() ? zombieAmount / zombieSpawnLocations.size() : zombieAmount;
+		int zombiesPerSpawn = details.isZombieLocationSpread() ? zombieAmount / zombieSpawnData.size() : zombieAmount;
 
-		for (Location l : zombieSpawnLocations) {
-			for (int ignored = 0; ignored < zombiesPerSpawn; ignored ++) 
-				spawnedZombies.add(l.getWorld().spawn(l, Zombie.class));
+		for (ZombieSpawnerData data : zombieSpawnData) {
+			for (int ignored = 0; ignored < zombiesPerSpawn; ignored ++)
+				spawnedZombies.add(data.spawnZombie());
 		}
 	}
 	

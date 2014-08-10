@@ -32,13 +32,15 @@
            "world": "world";
            "x": 2386,
            "y": 4,
-           "z": -281
+           "z": -281,
+           "isPigZombie": true
         },
         {
             "world": "world",
             "x": 2370,
             "y": 4,
-            "z": -281
+            "z": -281,
+            "isPigZombie": false
         }
     ]
 }

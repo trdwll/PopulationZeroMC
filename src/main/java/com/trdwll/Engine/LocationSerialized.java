@@ -8,6 +8,8 @@ public class LocationSerialized {
     private double x, y, z;
     private String world;
 
+    public LocationSerialized() { }
+
     public LocationSerialized(Location location) {
         this.x = location.getX();
         this.y = location.getY();

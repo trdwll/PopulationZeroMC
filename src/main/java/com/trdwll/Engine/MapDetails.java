@@ -22,11 +22,11 @@ public class MapDetails {
 
 	private LocationSerialized lobbySpawn;
 	private LocationSerialized playerSpawn; // TODO: Change to random locations in game
-	private List<LocationSerialized> zombieSpawnLocations;
+	private List<ZombieSpawnerData> zombieSpawnData;
 
     public MapDetails() { }
 
-    public MapDetails(String mapName, int minPlayers, int maxPlayers, boolean isZombieLocationSpread, int startZombieSpawnCount, int zombieIncrementalCount, int maxZombieSpawnCount, int waveDuration, int wavesPerRound, int roundSpawnAddition, int maxRounds, LocationSerialized lobbySpawn, LocationSerialized playerSpawn, List<LocationSerialized> zombieSpawnLocations) {
+    public MapDetails(String mapName, int minPlayers, int maxPlayers, boolean isZombieLocationSpread, int startZombieSpawnCount, int zombieIncrementalCount, int maxZombieSpawnCount, int waveDuration, int wavesPerRound, int roundSpawnAddition, int maxRounds, LocationSerialized lobbySpawn, LocationSerialized playerSpawn, List<ZombieSpawnerData> zombieSpawnData) {
         this.mapName = mapName;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -40,7 +40,7 @@ public class MapDetails {
         this.maxRounds = maxRounds;
         this.lobbySpawn = lobbySpawn;
         this.playerSpawn = playerSpawn;
-        this.zombieSpawnLocations = zombieSpawnLocations;
+        this.zombieSpawnData = zombieSpawnData;
     }
 
     public String getMapName() {
@@ -95,14 +95,14 @@ public class MapDetails {
         return playerSpawn.getLocation();
     }
 
-    public List<Location> getZombieSpawnLocations() {
-        List<Location> locations = new ArrayList<Location>();
+    public List<ZombieSpawnerData> getZombieSpawnData() {
+        List<ZombieSpawnerData> spawnData = new ArrayList<ZombieSpawnerData>();
 
-        for (LocationSerialized location : zombieSpawnLocations) {
-            locations.add(location.getLocation());
+        for (ZombieSpawnerData data : zombieSpawnData) {
+            spawnData.add(data);
         }
 
-        return locations;
+        return spawnData;
     }
 	
 }
