@@ -96,7 +96,7 @@ public class Utils {
         for (int x = xMin; x <= xMax; x++)
             for (int z = zMin; z <= zMax; z ++)
                 for (Entity entity : locOne.getWorld().getChunkAt(x, z).getEntities())
-                    if (!entity.isDead())
+                    if (!entity.isDead() && !(entity instanceof Player))
                         entity.remove();
     }
 

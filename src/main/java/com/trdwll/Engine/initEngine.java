@@ -50,7 +50,8 @@ public class initEngine implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
         for (Lobby lobby : plugin.getLobbies())
-            lobby.removePlayerFromLobby(event.getEntity());
+            if (lobby.removePlayerFromLobby(event.getEntity()))
+                event.getDrops().clear();
     }
 	 
 	@EventHandler (priority = EventPriority.NORMAL)

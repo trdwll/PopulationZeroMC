@@ -76,7 +76,7 @@ public class Lobby{
             Utils.message(Utils.PrefixType.DEBUG, "Tp'd to Spawn!", player);
             checkLobbyStatus();
 
-            return true;
+            return getLobbyState() != LobbyState.IN_GAME;
         }
 
         return false;
