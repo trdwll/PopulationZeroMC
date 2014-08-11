@@ -98,11 +98,8 @@ public class initGame extends JavaPlugin {
                         Lobby l = null;
 
                         for (Lobby lobby : getLobbies())
-                            if (lobby.getMapDetails().getMapName().equalsIgnoreCase(args[1])) {
+                            if (lobby.getMapDetails().getMapName().equalsIgnoreCase(args[1]))
                                 l = lobby;
-
-                                break;
-                            }
 
                         if (l != null) {
                             Utils.message(Utils.PrefixType.DEFAULT, "Joining Lobby for Map: " + l.getMapDetails().getMapName(), player);
