@@ -1,13 +1,17 @@
 package com.trdwll.Game;
 
+import com.trdwll.Engine.KitStorage;
 import com.trdwll.Engine.Lobby;
 import com.trdwll.Engine.ZombieSpawnerData;
 import com.trdwll.Utilities.Utils;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import sun.org.mozilla.javascript.internal.Kit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Match {
 
@@ -40,8 +44,18 @@ public class Match {
         if (!hasStarted()) {
             setMatchState(MatchState.IN_MATCH);
 
-            for (Player matchPlayer : lobby.getLobbyPlayers())
+            Random random = new Random();
+
+            for (Player matchPlayer : lobby.getLobbyPlayers()) {
                 matchPlayer.teleport(lobby.getMapDetails().getGameSpawn());
+                matchPlayer.setGameMode(GameMode.SURVIVAL);
+                Utils.clearInventory(matchPlayer);
+
+                if (matchPlayer.hasPermission("pzm.dev"))
+                    KitStorage.giveKit(matchPlayer, 4);
+                else
+                    KitStorage.giveKit(matchPlayer, random.nextInt(3));
+            }
 
             scheduleId = lobby.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(lobby.getPlugin(), new Runnable() {
 
