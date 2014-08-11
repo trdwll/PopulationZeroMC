@@ -27,7 +27,7 @@
         "z": -263
     },
 
-    "zombieSpawnLocations": [
+    "zombieSpawnData": [
         {
            "world": "world";
            "x": 2386,

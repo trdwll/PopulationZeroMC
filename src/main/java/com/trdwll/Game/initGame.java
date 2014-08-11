@@ -74,7 +74,11 @@ public class initGame extends JavaPlugin {
 		}, 20, 20);
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<Lobby> getLobbies() {
+        return lobbies;
+    }
+
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player player = (Player) sender;
 		// PZM Commands
 		if (cmd.getName().equalsIgnoreCase("pzm")) {

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
@@ -45,6 +46,12 @@ public class initEngine implements Listener {
 		event.getPlayer().teleport(plugin.spawn);
 		event.getPlayer().sendMessage(Utils.prefixDefault + " You have been teleported back to spawn!");
 	}
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        for (Lobby lobby : plugin.getLobbies())
+            lobby.removePlayerFromLobby(event.getEntity());
+    }
 	 
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onWeatherChange(WeatherChangeEvent event) {
