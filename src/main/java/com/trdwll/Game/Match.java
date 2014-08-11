@@ -7,25 +7,23 @@ import com.trdwll.Utilities.Utils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import sun.org.mozilla.javascript.internal.Kit;
+import org.bukkit.event.entity.ItemSpawnEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Match {
 
     private Lobby lobby;
     private MatchState matchState;
 
-    private List<Entity> spawnedEntities;
+    private Map<UUID, Entity> spawnedEntities;
 
     private int scheduleId = -1;
 
     public Match(Lobby lobby) {
         this.lobby = lobby;
         this.matchState = MatchState.PRE_MATCH;
-        this.spawnedEntities = new ArrayList<Entity>();
+        this.spawnedEntities = new HashMap<UUID, Entity>();
     }
 
     public void setMatchState(MatchState matchState) {
@@ -101,9 +99,19 @@ public class Match {
         for (Player matchPlayer : lobby.getLobbyPlayers())
             Utils.clearInventory(matchPlayer);
 
-        for (Entity entity : spawnedEntities)
-            if (!entity.isDead())
+        for (Entity entity : spawnedEntities.values()) {
+            if (!entity.isDead() && spawnedEntities.size() > 1) {
+                spawnedEntities.remove(entity.getUniqueId());
                 entity.remove();
+            } else {
+                for (Entity e : entity.getNearbyEntities(100, 100, 100))
+                    if (!e.isDead())
+                        e.remove();
+
+                if (!entity.isDead())
+                    entity.remove();
+            }
+        }
 
         lobby.getPlugin().getServer().getScheduler().cancelTask(scheduleId);
     }
@@ -112,8 +120,11 @@ public class Match {
         int zombiesPerSpawn = lobby.getMapDetails().isZombieLocationSpread() ? zombieAmount / lobby.getMapDetails().getZombieSpawnData().size() : zombieAmount;
 
         for (ZombieSpawnerData data : lobby.getMapDetails().getZombieSpawnData())
-            for (int ignored = 0; ignored < zombiesPerSpawn; ignored ++)
-                spawnedEntities.add(data.spawnZombie());
+            for (int ignored = 0; ignored < zombiesPerSpawn; ignored ++) {
+                Entity entity = data.spawnZombie();
+
+                spawnedEntities.put(entity.getUniqueId(), entity);
+            }
     }
 
     private enum MatchState {
