@@ -11,10 +11,14 @@ public class MapDetails {
     private String mapName;
     private int minPlayers, maxPlayers;
 
+    private int minX, minY, minZ;
+    private int maxX, maxY, maxZ;
+
     private boolean isZombieLocationSpread;
     private int startZombieSpawnCount;
     private int zombieIncrementalCount;
     private int maxZombieSpawnCount;
+
     private int waveDuration;
     private int wavesPerRound;
     private int roundSpawnAddition;
@@ -22,26 +26,10 @@ public class MapDetails {
 
 	private LocationSerialized lobbySpawn;
 	private LocationSerialized playerSpawn; // TODO: Change to random locations in game
+
 	private List<ZombieSpawnerData> zombieSpawnData;
 
     public MapDetails() { }
-
-    public MapDetails(String mapName, int minPlayers, int maxPlayers, boolean isZombieLocationSpread, int startZombieSpawnCount, int zombieIncrementalCount, int maxZombieSpawnCount, int waveDuration, int wavesPerRound, int roundSpawnAddition, int maxRounds, LocationSerialized lobbySpawn, LocationSerialized playerSpawn, List<ZombieSpawnerData> zombieSpawnData) {
-        this.mapName = mapName;
-        this.minPlayers = minPlayers;
-        this.maxPlayers = maxPlayers;
-        this.isZombieLocationSpread = isZombieLocationSpread;
-        this.startZombieSpawnCount = startZombieSpawnCount;
-        this.zombieIncrementalCount = zombieIncrementalCount;
-        this.maxZombieSpawnCount = maxZombieSpawnCount;
-        this.waveDuration = waveDuration;
-        this.wavesPerRound = wavesPerRound;
-        this.roundSpawnAddition = roundSpawnAddition;
-        this.maxRounds = maxRounds;
-        this.lobbySpawn = lobbySpawn;
-        this.playerSpawn = playerSpawn;
-        this.zombieSpawnData = zombieSpawnData;
-    }
 
     public String getMapName() {
         return mapName;
@@ -53,6 +41,30 @@ public class MapDetails {
 
     public int getMaxPlayers() {
         return maxPlayers;
+    }
+
+    public int getMinX() {
+        return minX;
+    }
+
+    public int getMaxX() {
+        return maxX;
+    }
+
+    public int getMinY() {
+        return minY;
+    }
+
+    public int getMaxY() {
+        return maxY;
+    }
+
+    public int getMinZ() {
+        return minZ;
+    }
+
+    public int getMaxZ() {
+        return maxZ;
     }
 
     public boolean isZombieLocationSpread() {

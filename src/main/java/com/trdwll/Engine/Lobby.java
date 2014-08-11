@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lobby {
+public class Lobby{
 
     private initGame plugin;
 

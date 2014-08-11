@@ -5,6 +5,7 @@ import com.trdwll.Engine.Lobby;
 import com.trdwll.Engine.ZombieSpawnerData;
 import com.trdwll.Utilities.Utils;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ItemSpawnEvent;
@@ -99,19 +100,7 @@ public class Match {
         for (Player matchPlayer : lobby.getLobbyPlayers())
             Utils.clearInventory(matchPlayer);
 
-        for (Entity entity : spawnedEntities.values()) {
-            if (!entity.isDead() && spawnedEntities.size() > 1) {
-                spawnedEntities.remove(entity.getUniqueId());
-                entity.remove();
-            } else {
-                for (Entity e : entity.getNearbyEntities(100, 100, 100))
-                    if (!e.isDead())
-                        e.remove();
-
-                if (!entity.isDead())
-                    entity.remove();
-            }
-        }
+        Utils.removeEntitiesBetween(new Location(lobby.getMapDetails().getGameSpawn().getWorld(), lobby.getMapDetails().getMinX(), lobby.getMapDetails().getMinY(), lobby.getMapDetails().getMinZ()), new Location(lobby.getMapDetails().getGameSpawn().getWorld(), lobby.getMapDetails().getMaxX(), lobby.getMapDetails().getMaxY(), lobby.getMapDetails().getMaxZ()));
 
         lobby.getPlugin().getServer().getScheduler().cancelTask(scheduleId);
     }

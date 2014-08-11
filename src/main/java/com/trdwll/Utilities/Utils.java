@@ -3,9 +3,12 @@ package com.trdwll.Utilities;
 
 import com.trdwll.Engine.Lobby;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -79,6 +82,22 @@ public class Utils {
     public static void clearInventory(Player player) {
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[] { new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR) });
+    }
+
+    public static void removeEntitiesBetween(Location locOne, Location locTwo) {
+        Chunk c1 = locOne.getChunk();
+        Chunk c2 = locTwo.getChunk();
+
+        int xMin = Math.min(c1.getX(), c2.getX());
+        int xMax = Math.max(c1.getX(), c2.getX());
+        int zMin = Math.min(c1.getZ(), c2.getZ());
+        int zMax = Math.max(c1.getZ(), c2.getZ());
+
+        for (int x = xMin; x <= xMax; x++)
+            for (int z = zMin; z <= zMax; z ++)
+                for (Entity entity : locOne.getWorld().getChunkAt(x, z).getEntities())
+                    if (!entity.isDead())
+                        entity.remove();
     }
 
     public enum PrefixType {
