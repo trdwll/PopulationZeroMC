@@ -95,7 +95,25 @@ public class initGame extends JavaPlugin {
                     try {
                         i = Integer.valueOf(args[1]);
                     } catch (NumberFormatException e) {
-                        Utils.message(Utils.PrefixType.ERROR, "Invalid Lobby ID!", player);
+                        Lobby l = null;
+
+                        for (Lobby lobby : getLobbies())
+                            if (lobby.getMapDetails().getMapName().equalsIgnoreCase(args[1])) {
+                                l = lobby;
+
+                                break;
+                            }
+
+                        if (l != null) {
+                            Utils.message(Utils.PrefixType.DEFAULT, "Joining Lobby for Map: " + l.getMapDetails().getMapName(), player);
+
+                            if (l.canPlayerJoin())
+                                l.addPlayerToLobby(player);
+                            else
+                                player.sendMessage(Utils.prefixWarn + "Lobby is full for Map: " + l.getMapDetails().getMapName());
+                        } else {
+                            Utils.message(Utils.PrefixType.ERROR, "Invalid Lobby ID!", player);
+                        }
 
                         return true;
                     }
