@@ -73,7 +73,7 @@ public class initGame extends JavaPlugin {
 			
 		}, 20, 20);
 	}
-
+//test dev
     public List<Lobby> getLobbies() {
         return lobbies;
     }
