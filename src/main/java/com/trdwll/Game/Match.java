@@ -8,7 +8,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.ItemSpawnEvent;
 
 import java.util.*;
 
@@ -50,6 +49,9 @@ public class Match {
                 matchPlayer.setGameMode(GameMode.SURVIVAL);
                 Utils.clearInventory(matchPlayer);
 
+                //
+                // remove on release
+                //
                 if (matchPlayer.hasPermission("pzm.dev"))
                     KitStorage.giveKit(matchPlayer, 4);
                 else

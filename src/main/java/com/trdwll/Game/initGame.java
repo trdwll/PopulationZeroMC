@@ -17,6 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.trdwll.Engine.Lobby;
 import com.trdwll.Engine.initEngine;
 import com.trdwll.Utilities.Utils;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class initGame extends JavaPlugin {
 	
@@ -66,7 +68,7 @@ public class initGame extends JavaPlugin {
 			@Override
 			public void run() {
 				for (World world : getServer().getWorlds()) {
-					if (world.getTime() > 14000 || world.getTime() < 14000)
+					if (world.getTime() < 14000 || world.getTime(22000))
 						world.setTime(14000);
 				}
 			}
@@ -167,17 +169,16 @@ public class initGame extends JavaPlugin {
 				else if (args.length == 2 && args[1].equalsIgnoreCase("dev") && sender.hasPermission("pzm.administration.kit.dev")) 
 					KitStorage.giveKit(player, 4);
 			} */
-			return true;
-		} 
-		else if (cmd.getName().equalsIgnoreCase("gm")) {
-			if (player.getGameMode() == GameMode.SURVIVAL  && sender.hasPermission("pzm.gamemode")) {
-				Utils.defaultMessage(player, "Changed gamemode to CREATIVE");
-				player.setGameMode(GameMode.CREATIVE);
-			}
-			else if (player.getGameMode() == GameMode.SURVIVAL && sender.hasPermission("pzm.gamemode")) {
-				Utils.defaultMessage(player, "Changed gamemode to SURVIVAL");
-				player.setGameMode(GameMode.SURVIVAL);
-			}
+
+            else if (args.length >= 1 && args[0].equalsIgnoreCase("nv") && sender.hasPermission("pzm.nightvision")) {
+                if (sender.hasPermission("pzm.nightvision")) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 50000, 1));
+                    Utils.defaultMessage(player, "Applied night vision!");
+                }
+                else {
+                    Utils.defaultMessage(player, "Night vision already applied!");
+                }
+            }
 			return true;
 		}
 		// TODO: add more commands
