@@ -5,11 +5,15 @@ import com.trdwll.Game.initGame;
 import com.trdwll.Utilities.Utils;
 import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lobby{
+public class Lobby implements Listener {
 
     private initGame plugin;
 
@@ -70,12 +74,16 @@ public class Lobby{
         if (getLobbyPlayers().contains(player)) {
             getLobbyPlayers().remove(player);
 
-            if (match != null)
+            if (match != null) {
                 Utils.clearInventory(player);
+                match.getScoreboard().onPlayerLeave(player);
+            }
 
             player.teleport(getPlugin().spawn);
             Utils.message(Utils.PrefixType.DEBUG, "Tp'd to Spawn!", player);
             checkLobbyStatus();
+
+            player.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
 
             return getLobbyState() != LobbyState.IN_GAME;
         }
@@ -97,6 +105,8 @@ public class Lobby{
         if (lobbyPlayers.size() >= getMapDetails().getMinPlayers() && getLobbyState() == Lobby.LobbyState.PRE_GAME) {
             match = new Match(this);
 
+            plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
             setLobbyState(Lobby.LobbyState.COUNTDOWN);
 
             countdownId = getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(getPlugin(), new Runnable() {
@@ -105,9 +115,12 @@ public class Lobby{
 
                 @Override
                 public void run() {
-                    if (match != null && countdown > 0)
-                        sendPlayersMessage((countdown --) + " SECONDS TILL START!");
-                    else
+                    if (match != null && countdown > 0) {
+                        match.setExpCountdown(countdown);
+                        match.getScoreboard().setCount(countdown);
+
+                        sendPlayersMessage((countdown--) + " SECONDS TILL START!");
+                    } else
                         getPlugin().getServer().getScheduler().cancelTask(countdownId);
                 }
 
@@ -145,8 +158,16 @@ public class Lobby{
 
             match.endMatch();
 
+            HandlerList.unregisterAll(this);
+
             match = null;
         }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (match != null)
+            match.onEntityDeath(event);
     }
 
     public enum LobbyState {

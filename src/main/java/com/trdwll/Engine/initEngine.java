@@ -41,7 +41,7 @@ public class initEngine implements Listener {
 		p.sendMessage(Utils.prefixDefault + "Use /pzm help to get help!");
 	}
 	
-	@EventHandler (priority = EventPriority.NORMAL)
+	@EventHandler (priority = EventPriority.LOWEST)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		event.getPlayer().teleport(plugin.spawn);
 		event.getPlayer().sendMessage(Utils.prefixDefault + " You have been teleported back to spawn!");

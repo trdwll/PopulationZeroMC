@@ -2,12 +2,14 @@ package com.trdwll.Game;
 
 import com.trdwll.Engine.KitStorage;
 import com.trdwll.Engine.Lobby;
+import com.trdwll.Engine.MatchScoreboard;
 import com.trdwll.Engine.ZombieSpawnerData;
 import com.trdwll.Utilities.Utils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.util.*;
 
@@ -16,6 +18,8 @@ public class Match {
     private Lobby lobby;
     private MatchState matchState;
 
+    private MatchScoreboard scoreboard;
+
     private Map<UUID, Entity> spawnedEntities;
 
     private int scheduleId = -1;
@@ -23,7 +27,12 @@ public class Match {
     public Match(Lobby lobby) {
         this.lobby = lobby;
         this.matchState = MatchState.PRE_MATCH;
+        this.scoreboard = new MatchScoreboard(this);
         this.spawnedEntities = new HashMap<UUID, Entity>();
+    }
+
+    public Lobby getLobby() {
+        return lobby;
     }
 
     public void setMatchState(MatchState matchState) {
@@ -32,6 +41,10 @@ public class Match {
 
     public MatchState getMatchState() {
         return matchState;
+    }
+
+    public MatchScoreboard getScoreboard() {
+        return scoreboard;
     }
 
     public boolean hasStarted() {
@@ -58,6 +71,9 @@ public class Match {
                     KitStorage.giveKit(matchPlayer, random.nextInt(3));
             }
 
+            setExpCountdown(0);
+            getScoreboard().setCount(0);
+
             scheduleId = lobby.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(lobby.getPlugin(), new Runnable() {
 
                 int round = 1;
@@ -76,7 +92,7 @@ public class Match {
                     }
 
                     if (wave % lobby.getMapDetails().getWavesPerRound() == 0 || wave == 1) {
-                        lobby.sendPlayersMessage("Round " + (round++) + " Has Begun!");
+                        lobby.sendPlayersMessage("Round " + (round ++) + " Has Begun!");
 
                         roundAddition += lobby.getMapDetails().getRoundSpawnAddition();
                         zombieCount += roundAddition;
@@ -90,14 +106,25 @@ public class Match {
                     zombieCount += lobby.getMapDetails().getZombieIncrementalCount();
 
                     lobby.sendPlayersMessage("Wave " + (wave ++) + " Inbound!");
+
+                    getScoreboard().update(wave - 1, round - 1, spawnedEntities.values());
                 }
 
             }, 0, lobby.getMapDetails().getWaveDuration() * 20);
         }
     }
 
+    public void setExpCountdown(int countdown) {
+        for (Player player : lobby.getLobbyPlayers()) {
+            player.setLevel(countdown);
+            player.setExp(0);
+        }
+    }
+
     public void endMatch() {
         setMatchState(MatchState.POST_MATCH);
+
+        getScoreboard().reset();
 
         for (Player matchPlayer : lobby.getLobbyPlayers())
             Utils.clearInventory(matchPlayer);
@@ -116,6 +143,13 @@ public class Match {
 
                 spawnedEntities.put(entity.getUniqueId(), entity);
             }
+    }
+
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (spawnedEntities.containsKey(event.getEntity().getUniqueId()))
+            spawnedEntities.remove(event.getEntity().getUniqueId());
+
+        getScoreboard().update(-1, -1, spawnedEntities.values());
     }
 
     private enum MatchState {
