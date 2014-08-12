@@ -49,7 +49,7 @@ public class JoinCommand extends PZMCommand {
             Integer id = null;
 
             try {
-                id = Integer.valueOf(args[1]);
+                id = Integer.valueOf(args[1]) - 1;
             } catch (NumberFormatException e) { }
 
             if (id != null) {

@@ -1,6 +1,7 @@
 package com.trdwll.Engine.commands;
 
 import com.trdwll.Engine.Messages;
+import com.trdwll.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -28,6 +29,7 @@ public class CommandRegistry {
         registerWithoutHelp(new ReloadComand());
 
         registerCommand(new JoinCommand());
+        registerCommand(new LeaveCommand());
         registerCommand(new TestCommand());
     }
 
@@ -69,7 +71,7 @@ public class CommandRegistry {
 
                 return true;
             }
-        } else if (args.length >= 1) {
+        } else if (args.length >= 1 && !args[0].equalsIgnoreCase("about")) {
             if (commands.containsKey(args[0].toLowerCase()))
                 if (!commands.get(args[0].toLowerCase()).usesPermission() || sender.hasPermission(commands.get(args[0].toLowerCase()).getPermission()))
                     return commands.get(args[0].toLowerCase()).onCommand(sender, cmd, label, args);
@@ -85,7 +87,9 @@ public class CommandRegistry {
             }
         }
 
-        return false;
+        sender.sendMessage(new String[] { Utils.translate(Messages.addPrefix("%prefix% &3About&8:")), Messages.getHelpFormat("Lead Programmer", "@trdwll | Twitter"), Messages.getHelpFormat("Lead Programmer", "@OhYea777 | BukkitDev"), Messages.getHelpFormat("Programmer", "@parkbully3 | Twitter"), Messages.getHelpFormat("QA Tester", "@dalton_test | Twitter") });
+
+        return true;
     }
 
     public String[] getHelp(int page) {

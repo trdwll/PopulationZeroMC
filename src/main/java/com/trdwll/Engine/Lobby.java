@@ -3,6 +3,7 @@ package com.trdwll.Engine;
 import com.trdwll.Game.Match;
 import com.trdwll.Game.initGame;
 import com.trdwll.Utilities.Utils;
+import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class Lobby{
 
     private initGame plugin;
 
-    private List<Player> lobbyPlayers;
+    private ConcurrentSet<Player> lobbyPlayers;
     private Lobby.LobbyState lobbyState;
     private MapDetails mapDetails;
 
@@ -24,7 +25,7 @@ public class Lobby{
     public Lobby(initGame plugin, MapDetails mapDetails) {
         this.plugin = plugin;
         this.mapDetails = mapDetails;
-        this.lobbyPlayers = new ArrayList<Player>();
+        this.lobbyPlayers = new ConcurrentSet<Player>();
         this.lobbyState = Lobby.LobbyState.PRE_GAME;
     }
 
@@ -44,7 +45,7 @@ public class Lobby{
         return mapDetails;
     }
 
-    public List<Player> getLobbyPlayers() {
+    public ConcurrentSet<Player> getLobbyPlayers() {
         return lobbyPlayers;
     }
 
@@ -133,7 +134,7 @@ public class Lobby{
         getPlugin().getServer().getScheduler().cancelTask(countdownId);
     }
 
-    private void endMatch() {
+    public void endMatch() {
         if (match != null) {
             setLobbyState(Lobby.LobbyState.PRE_GAME);
 

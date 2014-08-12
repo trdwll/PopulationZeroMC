@@ -33,7 +33,8 @@ public class initGame extends JavaPlugin {
         Messages.setPlugin(this);
 
         lobbies = new HashMap<String, Lobby>();
-        spawn = new Location(getServer().getWorld("world"), 2322, 4, -261);
+        // spawn = new Location(getServer().getWorld("world"), 2322, 4, -261);
+        spawn = new Location(getServer().getWorld("world"), 2394.5, 4, -273);
         commandRegistry = new CommandRegistry();
 
         try {
@@ -86,6 +87,9 @@ public class initGame extends JavaPlugin {
     }
 
     public void reload() {
+        for (Lobby lobby : new ArrayList<Lobby>(getLobbies()))
+            lobby.endMatch();
+
         lobbies.clear();
 
         for (Lobby lobby : GsonFileUtils.loadAllLobbiesFromDirectory(new File(getDataFolder(), "MapDetails")))

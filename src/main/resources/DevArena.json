@@ -4,6 +4,13 @@
     "minPlayers": 1;
     "maxPlayers": 5;
 
+    "minX": 2391,
+    "minY": 3,
+    "minZ": -263,
+    "maxX": 2360,
+    "maxY": 13,
+    "maxZ": -284,
+
     "isZombieLocationSpread": true;
     "startZombieSpawnCount": 16;
     "zombieIncrementalCount": 8,
@@ -16,30 +23,30 @@
 
     "lobbySpawn": {
         "world": "world";
-        "x": 2387,
+        "x": 2394.5,
         "y": 4,
-        "z": -263
+        "z": -273
     },
     "playerSpawn": {
         "world": "world";
-        "x": 2368,
+        "x": 2388.5,
         "y": 4,
-        "z": -263
+        "z": -273
     },
 
     "zombieSpawnData": [
         {
            "world": "world";
-           "x": 2386,
+           "x": 2363,
            "y": 4,
-           "z": -281,
+           "z": -280,
            "isPigZombie": true
         },
         {
             "world": "world",
-            "x": 2370,
+            "x": 2363,
             "y": 4,
-            "z": -281,
+            "z": -265,
             "isPigZombie": false
         }
     ]
