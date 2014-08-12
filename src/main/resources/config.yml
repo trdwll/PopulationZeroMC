@@ -1,0 +1,4 @@
+Messages:
+  CommandHelp: "%prefix% &3Command Help &8(&3Page &b%page% &8/ &b%pages%&8):"
+  HelpFormat: "&8-&3] &3%help%&8: &b%command%"
+  Reloaded: "%prefix% &3Configurations Reloaded!"

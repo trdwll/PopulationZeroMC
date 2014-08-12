@@ -1,17 +1,15 @@
 package com.trdwll.Game;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import com.trdwll.Engine.Messages;
+import com.trdwll.Engine.commands.CommandRegistry;
 import com.trdwll.Utilities.GsonFileUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.trdwll.Engine.Lobby;
@@ -19,15 +17,24 @@ import com.trdwll.Engine.initEngine;
 import com.trdwll.Utilities.Utils;
 
 public class initGame extends JavaPlugin {
-	
+
+    private static initGame INSTANCE;
+
 	public Location spawn;
-	private List<Lobby> lobbies;
+	private Map<String, Lobby> lobbies;
+    private CommandRegistry commandRegistry;
 
 	public void onEnable() {
-        GsonFileUtils.setPlugin(this);
+        INSTANCE = this;
 
-        lobbies = new ArrayList<Lobby>();
+        saveResource("config.yml", false);
+
+        GsonFileUtils.setPlugin(this);
+        Messages.setPlugin(this);
+
+        lobbies = new HashMap<String, Lobby>();
 		spawn = new Location(getServer().getWorld("world"), 2322, 4, -261);
+        commandRegistry = new CommandRegistry();
 		
 		try {
 			this.getServer().getPluginManager().registerEvents(new initEngine(this), this);	
@@ -38,7 +45,7 @@ public class initGame extends JavaPlugin {
 		}
 
         // lobbies.add(new Lobby(this, GsonFileUtils.loadMapDetailsFromFile("DevArena.json", true)));
-        lobbies.addAll(GsonFileUtils.loadAllLobbiesFromDirectory(new File(getDataFolder(), "MapDetails")));
+        reload();
 
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 138, 15, 247), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
 		// lobbyOne = new Lobby(this, new Location(getServer().getWorld("world"), 205, 70, 298), getServer().getWorld("world"), 135, 10, 236, 104, 25, 252);
@@ -74,12 +81,29 @@ public class initGame extends JavaPlugin {
 		}, 20, 20);
 	}
 
-    public List<Lobby> getLobbies() {
+    public static initGame getInstance() {
+        return INSTANCE;
+    }
+
+    public void reload() {
+        lobbies.clear();
+
+        for (Lobby lobby : GsonFileUtils.loadAllLobbiesFromDirectory(new File(getDataFolder(), "MapDetails")))
+            lobbies.put(lobby.getMapDetails().getMapName().toLowerCase(), lobby);
+
+        reloadConfig();
+    }
+
+    public Collection<Lobby> getLobbies() {
+        return lobbies.values();
+    }
+
+    public Map<String, Lobby> getNamedLobbies() {
         return lobbies;
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player player = (Player) sender;
+		/* Player player = (Player) sender;
 		// PZM Commands
 		if (cmd.getName().equalsIgnoreCase("pzm")) {
 			if (args.length == 0)
@@ -130,12 +154,12 @@ public class initGame extends JavaPlugin {
                 } else {
                     Utils.message(Utils.PrefixType.ERROR, "There are no lobbies available!", player);
                 }
-				/* else if (args[1].equalsIgnoreCase("area51")) {
+				*//* else if (args[1].equalsIgnoreCase("area51")) {
 					if (area51.canPlayerJoin())
 						area51.addPlayerToLobby(player);
 					else
 						player.sendMessage(Utils.prefixWarn + "Area51 Lobby is full!");
-				} */
+				} *//*
 				//initEngine.joinMatch(player, new Location(player.getLocation().getWorld(), 138.84793, 15.000, 247.12367));
 			}
 			else if (args.length >= 1 && args[0].equalsIgnoreCase("leave") && sender.hasPermission("pzm.leave")) {
@@ -150,7 +174,7 @@ public class initGame extends JavaPlugin {
 			}
 		
 			// KITS
-			/* else if (args.length >= 1 && args[0].equalsIgnoreCase("kit") && sender.hasPermission("pzm.kit")) {
+			*//* else if (args.length >= 1 && args[0].equalsIgnoreCase("kit") && sender.hasPermission("pzm.kit")) {
 				if (args.length == 1 && args[0].equalsIgnoreCase("kit"))
 					sender.sendMessage(Utils.KitMenu);
 				if (args.length == 2 && args[1].equalsIgnoreCase("noob") && sender.hasPermission("pzm.kit.noob")) 
@@ -163,7 +187,7 @@ public class initGame extends JavaPlugin {
 					KitStorage.giveKit(player, 3);
 				else if (args.length == 2 && args[1].equalsIgnoreCase("dev") && sender.hasPermission("pzm.administration.kit.dev")) 
 					KitStorage.giveKit(player, 4);
-			} */
+			} *//*
 			return true;
 		} 
 		else if (cmd.getName().equalsIgnoreCase("gm")) {
@@ -176,8 +200,8 @@ public class initGame extends JavaPlugin {
 				player.setGameMode(GameMode.SURVIVAL);
 			}
 			return true;
-		}
+		} */
 		// TODO: add more commands
-		return false;
+		return commandRegistry.onCommand(sender, cmd, label, args);
 	}
 }
