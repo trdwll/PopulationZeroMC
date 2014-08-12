@@ -1,24 +1,41 @@
 package com.trdwll.Engine;
 
+import com.trdwll.Game.initGame;
+import com.trdwll.Utilities.Utils;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Messages {
 
-    private Map<String, String> localisedMessages;
+    private static initGame plugin;
 
-    public Messages() {
-        this.localisedMessages = new HashMap<String, String>();
-
-        init();
+    public static void setPlugin(initGame plugin) {
+        Messages.plugin = plugin;
     }
 
-    public void init() {
-
+    public static String addPrefix(String message) {
+        return addPrefix(Utils.PrefixType.DEFAULT, message);
     }
 
-    public String getMessage(String id) {
-        return "";
+    public static String addPrefix(Utils.PrefixType prefixType, String message) {
+        return message.replace("%prefix%", prefixType.getPrefix().substring(0, Math.max(0, prefixType.getPrefix().length() - 1)));
+    }
+
+    public static String getCommandHelp(int page, int pages) {
+        return getCommandHelp(Utils.PrefixType.DEFAULT, page, pages);
+    }
+
+    public static String getCommandHelp(Utils.PrefixType prefixType, int page, int pages) {
+        return Utils.translate(addPrefix(prefixType, plugin.getConfig().getString("Messages.CommandHelp", "%prefix% &3Command Help &8(&3Page &b%page% &8/ &b%pages%&8):").replace("%page%", String.valueOf(page)).replace("%pages%", String.valueOf(pages))));
+    }
+
+    public static String getHelpFormat(String help, String command) {
+        return Utils.translate(plugin.getConfig().getString("Messages.HelpFormat", "&8-&3] &3%help%&8: &b%command%").replace("%help%", help).replace("%command%", command));
+    }
+
+    public static String getReloaded() {
+        return Utils.translate(addPrefix(plugin.getConfig().getString("Messages.Reloaded", "%prefix% &3Configurations Reloaded!")));
     }
 
 }
