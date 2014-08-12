@@ -19,7 +19,7 @@ public class TestCommand extends PZMCommand {
 
     @Override
     public String[] getHelp() {
-        return new String[] { Utils.translate(Messages.addPrefix("%prefix% &3" + getName() + " Help&8:")), Messages.getHelpFormat("Test", "To test stuffs use /pzm test") };
+        return new String[] { Utils.translate(Messages.addPrefix("%prefix% &3" + getName() + " Help&8:")), Messages.getHelpFormat("Test", "To Test Stuffs Use /pzm test") };
     }
 
     @Override
