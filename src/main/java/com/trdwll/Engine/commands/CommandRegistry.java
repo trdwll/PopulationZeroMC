@@ -67,7 +67,7 @@ public class CommandRegistry {
 
                 return true;
             } else {
-                sender.sendMessage("Invalid command!");
+                sender.sendMessage(Messages.getInvalidCommand());
 
                 return true;
             }
@@ -76,12 +76,12 @@ public class CommandRegistry {
                 if (!commands.get(args[0].toLowerCase()).usesPermission() || sender.hasPermission(commands.get(args[0].toLowerCase()).getPermission()))
                     return commands.get(args[0].toLowerCase()).onCommand(sender, cmd, label, args);
                 else {
-                    sender.sendMessage("Invalid permissions!");
+                    sender.sendMessage(Messages.getNoPermission());
 
                     return true;
                 }
             else {
-                sender.sendMessage("Invalid command!");
+                sender.sendMessage(Messages.getInvalidCommand());
 
                 return true;
             }

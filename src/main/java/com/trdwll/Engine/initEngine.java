@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
@@ -44,7 +45,7 @@ public class initEngine implements Listener {
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		event.getPlayer().teleport(plugin.getSettings().getSpawn());
-		event.getPlayer().sendMessage(Utils.prefixDefault + " You have been teleported back to spawn!");
+		event.getPlayer().sendMessage(Messages.getTeleportedToSpawn());
 	}
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -59,5 +60,13 @@ public class initEngine implements Listener {
 		if (event.toWeatherState())
 			event.setCancelled(true);
 	}
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+        if (event.getMessage().equalsIgnoreCase("/?") || event.getMessage().equalsIgnoreCase("?")) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Utils.translate("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is an error."));
+        }
+    }
 
 }

@@ -54,7 +54,7 @@ public class Lobby implements Listener {
     }
 
     public boolean canPlayerJoin(Player player) {
-        if (player.hasPermission("pzm.join.force")) {
+        if (player.hasPermission("pzm.forcejoin")) {
             return match != null ? match.canPlayerJoin() : getLobbyState() != Lobby.LobbyState.IN_GAME && getLobbyPlayers().size() < getMapDetails().getMaxPlayers();
         } else {
             return getLobbyState() != Lobby.LobbyState.IN_GAME && getLobbyPlayers().size() < getMapDetails().getMaxPlayers();
@@ -87,7 +87,7 @@ public class Lobby implements Listener {
             }
 
             player.teleport(getPlugin().getSettings().getSpawn());
-            Utils.message(Utils.PrefixType.DEBUG, "Tp'd to Spawn!", player);
+            player.sendMessage(Messages.getTeleportedToSpawn());
             checkLobbyStatus();
 
             player.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());

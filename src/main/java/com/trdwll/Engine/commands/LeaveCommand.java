@@ -28,14 +28,14 @@ public class LeaveCommand extends PZMCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("Players only!");
+            sender.sendMessage(Messages.getPlayersOnly());
 
             return true;
         }
 
         Player player = (Player) sender;
 
-        Utils.message(Utils.PrefixType.DEBUG, "Left lobby", player);
+        sender.sendMessage(Messages.getLobbyLeave());
 
         for (Lobby lobby : initGame.getInstance().getLobbies())
             lobby.removePlayerFromLobby(player);

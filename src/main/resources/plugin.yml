@@ -16,11 +16,12 @@ permissions:
     children:
       pzm.player: true
       pzm.reload: true
+      pzm.nv: true
     default: op
   pzm.donor:
     children:
       pzm.player: true
-      pzm.join.force: true
+      pzm.forcejoin: true
   pzm.player:
     children:
       pzm.join: true

@@ -38,7 +38,7 @@ public class JoinCommand extends PZMCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("Players only!");
+            sender.sendMessage(Messages.getPlayersOnly());
 
             return true;
         }
@@ -53,11 +53,14 @@ public class JoinCommand extends PZMCommand {
             } catch (NumberFormatException e) { }
 
             if (id != null) {
-                if (id >= 0 && id <= initGame.getInstance().getLobbies().size() && !initGame.getInstance().getLobbies().isEmpty())
-                    if (initGame.getInstance().getLobbies().toArray(new Lobby[initGame.getInstance().getLobbies().size()])[id].canPlayerJoin(player))
-                        initGame.getInstance().getLobbies().toArray(new Lobby[initGame.getInstance().getLobbies().size()])[id].addPlayerToLobby(player);
+                if (id >= 0 && id <= initGame.getInstance().getLobbies().size() && !initGame.getInstance().getLobbies().isEmpty()) {
+                    Lobby lobby = initGame.getInstance().getLobbies().toArray(new Lobby[initGame.getInstance().getLobbies().size()])[id];
+
+                    if (lobby.canPlayerJoin(player))
+                        lobby.addPlayerToLobby(player);
                     else
-                        sender.sendMessage("Lobby Full");
+                        sender.sendMessage(Messages.getLobbyFull(lobby));
+                }
 
                 return true;
             }
@@ -70,9 +73,9 @@ public class JoinCommand extends PZMCommand {
                 if (initGame.getInstance().getNamedLobbies().get(name).canPlayerJoin(player))
                     initGame.getInstance().getNamedLobbies().get(name).addPlayerToLobby(player);
                 else
-                    sender.sendMessage("Lobby Full");
+                    sender.sendMessage(Messages.getLobbyFull(initGame.getInstance().getNamedLobbies().get(name)));
             else
-                sender.sendMessage("Invalid Lobby");
+                sender.sendMessage(Messages.getLobbyInvalid());
 
             return true;
         }
