@@ -1,5 +1,6 @@
 package com.trdwll.Utilities;
 
+import com.trdwll.Engine.GeneralSettings;
 import com.trdwll.Engine.Lobby;
 import com.trdwll.Engine.MapDetails;
 import com.trdwll.Game.initGame;
@@ -41,10 +42,29 @@ public class GsonFileUtils {
     }
 
     public static MapDetails loadMapDetailsFromFile(File file) {
+        return (MapDetails) loadFromJsonFile(file, MapDetails.class);
+    }
+
+    public static GeneralSettings loadSettingsFromFile(String file, boolean resource) {
+        return loadSettingsFromFile(file, resource, false);
+    }
+
+    public static GeneralSettings loadSettingsFromFile(String file, boolean resource, boolean replace) {
+        if (resource)
+            plugin.saveResource(file, replace);
+
+        return loadSettingsFromFile(new File(plugin.getDataFolder(), file));
+    }
+
+    public static GeneralSettings loadSettingsFromFile(File file) {
+        return (GeneralSettings) loadFromJsonFile(file, GeneralSettings.class);
+    }
+
+    public static Object loadFromJsonFile(File file, Class<?> clz) {
         try {
             String json = FileUtils.readFileToString(file);
 
-            return Utils.getGson().fromJson(json, MapDetails.class);
+            return Utils.getGson().fromJson(json, clz);
         } catch (IOException e) {
             plugin.getLogger().severe("[GsonFileUtils] Failed to Load MapDetails for a Map!");
             e.printStackTrace();

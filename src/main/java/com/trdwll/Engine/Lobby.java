@@ -53,16 +53,23 @@ public class Lobby implements Listener {
         return lobbyPlayers;
     }
 
-    public boolean canPlayerJoin() {
-        return getLobbyState() != Lobby.LobbyState.IN_GAME && getLobbyPlayers().size() < getMapDetails().getMaxPlayers();
+    public boolean canPlayerJoin(Player player) {
+        if (player.hasPermission("pzm.join.force")) {
+            return match != null ? match.canPlayerJoin() : getLobbyState() != Lobby.LobbyState.IN_GAME && getLobbyPlayers().size() < getMapDetails().getMaxPlayers();
+        } else {
+            return getLobbyState() != Lobby.LobbyState.IN_GAME && getLobbyPlayers().size() < getMapDetails().getMaxPlayers();
+        }
     }
 
     public boolean addPlayerToLobby(Player player) {
-        if (canPlayerJoin() && !getLobbyPlayers().contains(player)) {
+        if (canPlayerJoin(player) && !getLobbyPlayers().contains(player)) {
             getLobbyPlayers().add(player);
 
             player.teleport(getMapDetails().getLobbySpawn());
             checkLobbyStatus();
+
+            if (match != null)
+                match.onPlayerJoin(player);
 
             return true;
         }
@@ -79,7 +86,7 @@ public class Lobby implements Listener {
                 match.getScoreboard().onPlayerLeave(player);
             }
 
-            player.teleport(getPlugin().spawn);
+            player.teleport(getPlugin().getSettings().getSpawn());
             Utils.message(Utils.PrefixType.DEBUG, "Tp'd to Spawn!", player);
             checkLobbyStatus();
 

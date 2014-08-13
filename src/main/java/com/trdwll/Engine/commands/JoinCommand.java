@@ -54,7 +54,7 @@ public class JoinCommand extends PZMCommand {
 
             if (id != null) {
                 if (id >= 0 && id <= initGame.getInstance().getLobbies().size() && !initGame.getInstance().getLobbies().isEmpty())
-                    if (initGame.getInstance().getLobbies().toArray(new Lobby[initGame.getInstance().getLobbies().size()])[id].canPlayerJoin())
+                    if (initGame.getInstance().getLobbies().toArray(new Lobby[initGame.getInstance().getLobbies().size()])[id].canPlayerJoin(player))
                         initGame.getInstance().getLobbies().toArray(new Lobby[initGame.getInstance().getLobbies().size()])[id].addPlayerToLobby(player);
                     else
                         sender.sendMessage("Lobby Full");
@@ -67,7 +67,7 @@ public class JoinCommand extends PZMCommand {
             String name = patchArgs(args).toLowerCase();
 
             if (initGame.getInstance().getNamedLobbies().containsKey(name))
-                if (initGame.getInstance().getNamedLobbies().get(name).canPlayerJoin())
+                if (initGame.getInstance().getNamedLobbies().get(name).canPlayerJoin(player))
                     initGame.getInstance().getNamedLobbies().get(name).addPlayerToLobby(player);
                 else
                     sender.sendMessage("Lobby Full");

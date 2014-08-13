@@ -3,17 +3,13 @@ package com.trdwll.Engine;
 import com.trdwll.Game.Match;
 import com.trdwll.Utilities.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MatchScoreboard {
 
@@ -21,7 +17,6 @@ public class MatchScoreboard {
 
     private Scoreboard scoreboard;
     private Objective objective;
-    private Map<String, Team> playerTeams;
 
     public MatchScoreboard(Match match) {
         this.match = match;
@@ -29,19 +24,12 @@ public class MatchScoreboard {
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         scoreboard.clearSlot(DisplaySlot.SIDEBAR);
 
-        playerTeams = new HashMap<String, Team>();
-
         createTeams();
     }
 
     private void createTeams() {
-        for (Player player : match.getLobby().getLobbyPlayers()) {
-            Team team = scoreboard.registerNewTeam(player.getName());
-            team.setPrefix(ChatColor.AQUA.toString());
-            playerTeams.put(player.getName(), team);
-
-            player.setScoreboard(scoreboard);
-        }
+        for (Player player : match.getLobby().getLobbyPlayers())
+            onPlayerJoin(player);
 
         start();
     }
@@ -51,6 +39,8 @@ public class MatchScoreboard {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(Utils.translate("&8[&3Countdown&8]"));
     }
+
+
 
     public void setCount(int count) {
         if (count == 0) {
@@ -73,12 +63,12 @@ public class MatchScoreboard {
         objective.getScore(Utils.translate("&2Zombies&8:")).setScore(entities.size());
     }
 
-    public void onPlayerLeave(Player player) {
-        if (playerTeams.containsKey(player.getName())) {
-            Team team = playerTeams.remove(player.getName());
+    public void onPlayerJoin(Player player) {
+        player.setScoreboard(scoreboard);
+    }
 
-            team.removePlayer(player);
-        }
+    public void onPlayerLeave(Player player) {
+        // TODO: Anything...?
     }
 
     public void reset() {

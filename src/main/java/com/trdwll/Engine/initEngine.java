@@ -35,7 +35,7 @@ public class initEngine implements Listener {
 		Player p = e.getPlayer();
 		String pname = p.getName();
 		
-		p.teleport(plugin.spawn);
+		p.teleport(plugin.getSettings().getSpawn());
 		
 		Bukkit.broadcastMessage(Utils.prefixDefault + "Welcome " + ChatColor.RED + pname + ChatColor.RESET + " to " + Utils.modName + "!");
 		p.sendMessage(Utils.prefixDefault + "Use /pzm help to get help!");
@@ -43,7 +43,7 @@ public class initEngine implements Listener {
 	
 	@EventHandler (priority = EventPriority.LOWEST)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		event.getPlayer().teleport(plugin.spawn);
+		event.getPlayer().teleport(plugin.getSettings().getSpawn());
 		event.getPlayer().sendMessage(Utils.prefixDefault + " You have been teleported back to spawn!");
 	}
 

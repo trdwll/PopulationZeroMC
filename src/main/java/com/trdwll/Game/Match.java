@@ -51,14 +51,28 @@ public class Match {
         return matchState == MatchState.IN_MATCH;
     }
 
+    public boolean canPlayerJoin() {
+        return getMatchState() != MatchState.POST_MATCH;
+    }
+
+    public void onPlayerJoin(Player player) {
+        if (getMatchState() == MatchState.PRE_MATCH) {
+            player.teleport(getLobby().getMapDetails().getGameSpawn());
+            player.setGameMode(GameMode.SURVIVAL);
+            Utils.clearInventory(player);
+        }
+
+        getScoreboard().onPlayerJoin(player);
+    }
+    
     public void startMatch() {
         if (!hasStarted()) {
             setMatchState(MatchState.IN_MATCH);
 
             Random random = new Random();
 
-            for (Player matchPlayer : lobby.getLobbyPlayers()) {
-                matchPlayer.teleport(lobby.getMapDetails().getGameSpawn());
+            for (Player matchPlayer : getLobby().getLobbyPlayers()) {
+                matchPlayer.teleport(getLobby().getMapDetails().getGameSpawn());
                 matchPlayer.setGameMode(GameMode.SURVIVAL);
                 Utils.clearInventory(matchPlayer);
 
@@ -74,48 +88,48 @@ public class Match {
             setExpCountdown(0);
             getScoreboard().setCount(0);
 
-            scheduleId = lobby.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(lobby.getPlugin(), new Runnable() {
+            scheduleId = getLobby().getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(getLobby().getPlugin(), new Runnable() {
 
                 int round = 1;
                 int wave = 1;
                 int roundAddition = 0;
 
-                int zombieCount = lobby.getMapDetails().getStartZombieSpawnCount();
+                int zombieCount = getLobby().getMapDetails().getStartZombieSpawnCount();
 
                 @Override
                 public void run() {
 
                     if (getMatchState() != MatchState.IN_MATCH) {
-                        lobby.getPlugin().getServer().getScheduler().cancelTask(scheduleId);
+                        getLobby().getPlugin().getServer().getScheduler().cancelTask(scheduleId);
 
                         return;
                     }
 
-                    if (wave % lobby.getMapDetails().getWavesPerRound() == 0 || wave == 1) {
-                        lobby.sendPlayersMessage("Round " + (round ++) + " Has Begun!");
+                    if (wave % getLobby().getMapDetails().getWavesPerRound() == 0 || wave == 1) {
+                        getLobby().sendPlayersMessage("Round " + (round ++) + " Has Begun!");
 
-                        roundAddition += lobby.getMapDetails().getRoundSpawnAddition();
+                        roundAddition += getLobby().getMapDetails().getRoundSpawnAddition();
                         zombieCount += roundAddition;
                     }
 
-                    if (lobby.getMapDetails().getMaxZombieSpawnCount() != -1 && zombieCount > lobby.getMapDetails().getMaxZombieSpawnCount())
-                        zombieCount = lobby.getMapDetails().getMaxZombieSpawnCount();
+                    if (getLobby().getMapDetails().getMaxZombieSpawnCount() != -1 && zombieCount > getLobby().getMapDetails().getMaxZombieSpawnCount())
+                        zombieCount = getLobby().getMapDetails().getMaxZombieSpawnCount();
 
                     spawnWave(zombieCount);
 
-                    zombieCount += lobby.getMapDetails().getZombieIncrementalCount();
+                    zombieCount += getLobby().getMapDetails().getZombieIncrementalCount();
 
-                    lobby.sendPlayersMessage("Wave " + (wave ++) + " Inbound!");
+                    getLobby().sendPlayersMessage("Wave " + (wave ++) + " Inbound!");
 
                     getScoreboard().update(wave - 1, round - 1, spawnedEntities.values());
                 }
 
-            }, 0, lobby.getMapDetails().getWaveDuration() * 20);
+            }, 0, getLobby().getMapDetails().getWaveDuration() * 20);
         }
     }
 
     public void setExpCountdown(int countdown) {
-        for (Player player : lobby.getLobbyPlayers()) {
+        for (Player player : getLobby().getLobbyPlayers()) {
             player.setLevel(countdown);
             player.setExp(0);
         }
@@ -126,18 +140,18 @@ public class Match {
 
         getScoreboard().reset();
 
-        for (Player matchPlayer : lobby.getLobbyPlayers())
+        for (Player matchPlayer : getLobby().getLobbyPlayers())
             Utils.clearInventory(matchPlayer);
 
-        Utils.removeEntitiesBetween(new Location(lobby.getMapDetails().getGameSpawn().getWorld(), lobby.getMapDetails().getMinX(), lobby.getMapDetails().getMinY(), lobby.getMapDetails().getMinZ()), new Location(lobby.getMapDetails().getGameSpawn().getWorld(), lobby.getMapDetails().getMaxX(), lobby.getMapDetails().getMaxY(), lobby.getMapDetails().getMaxZ()));
+        Utils.removeEntitiesBetween(new Location(getLobby().getMapDetails().getGameSpawn().getWorld(), getLobby().getMapDetails().getMinX(), getLobby().getMapDetails().getMinY(), getLobby().getMapDetails().getMinZ()), new Location(getLobby().getMapDetails().getGameSpawn().getWorld(), getLobby().getMapDetails().getMaxX(), getLobby().getMapDetails().getMaxY(), getLobby().getMapDetails().getMaxZ()));
 
-        lobby.getPlugin().getServer().getScheduler().cancelTask(scheduleId);
+        getLobby().getPlugin().getServer().getScheduler().cancelTask(scheduleId);
     }
 
     public void spawnWave(int zombieAmount) {
-        int zombiesPerSpawn = lobby.getMapDetails().isZombieLocationSpread() ? zombieAmount / lobby.getMapDetails().getZombieSpawnData().size() : zombieAmount;
+        int zombiesPerSpawn = getLobby().getMapDetails().isZombieLocationSpread() ? zombieAmount / getLobby().getMapDetails().getZombieSpawnData().size() : zombieAmount;
 
-        for (ZombieSpawnerData data : lobby.getMapDetails().getZombieSpawnData())
+        for (ZombieSpawnerData data : getLobby().getMapDetails().getZombieSpawnData())
             for (int ignored = 0; ignored < zombiesPerSpawn; ignored ++) {
                 Entity entity = data.spawnZombie();
 
