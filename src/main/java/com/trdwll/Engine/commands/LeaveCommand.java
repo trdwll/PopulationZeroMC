@@ -35,10 +35,9 @@ public class LeaveCommand extends PZMCommand {
 
         Player player = (Player) sender;
 
-        sender.sendMessage(Messages.getLobbyLeave());
-
         for (Lobby lobby : initGame.getInstance().getLobbies())
-            lobby.removePlayerFromLobby(player);
+            if (lobby.removePlayerFromLobby(player))
+                sender.sendMessage(Messages.getLobbyLeave());
 
         return false;
     }
