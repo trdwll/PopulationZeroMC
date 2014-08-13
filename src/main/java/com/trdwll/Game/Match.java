@@ -119,7 +119,8 @@ public class Match {
                     if (getLobby().getMapDetails().getMaxZombieSpawnCount() != -1 && zombieCount > getLobby().getMapDetails().getMaxZombieSpawnCount())
                         zombieCount = getLobby().getMapDetails().getMaxZombieSpawnCount();
 
-                    spawnWave(zombieCount);
+                    if (spawnedEntities.size() < getLobby().getMapDetails().getMaxZombieSpawnCount())
+                        spawnWave(zombieCount);
 
                     zombieCount += getLobby().getMapDetails().getZombieIncrementalCount();
 
