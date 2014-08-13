@@ -67,7 +67,7 @@ public class Messages {
     }
 
     public static String getLobbyLeave() {
-        return Utils.translate(addPrefix(plugin.getConfig().getString("Messages.LobbyLeave", "%prefix% &Left Lobby")));
+        return Utils.translate(addPrefix(plugin.getConfig().getString("Messages.LobbyLeave", "%prefix% &cLeft Lobby")));
     }
 
 }

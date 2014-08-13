@@ -9,4 +9,4 @@ Messages:
   TeleportedToSpawn: "%prefix% &3Teleported to Spawn"
   LobbyFull: "%prefix% &cThe Lobby for Map&8: &3%map% &8- &3is Full!"
   LobbyInvalid: "%prefix% &cInvalid Lobby!"
-  LobbyLeave: "%prefix% &Left Lobby"
+  LobbyLeave: "%prefix% &cLeft Lobby"
