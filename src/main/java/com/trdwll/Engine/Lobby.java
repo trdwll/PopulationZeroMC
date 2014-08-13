@@ -151,7 +151,7 @@ public class Lobby implements Listener {
                 }
 
             }, 200);
-        } else if (getLobbyPlayers().size() < getMapDetails().getMinPlayers() && getLobbyState() != Lobby.LobbyState.PRE_GAME) {
+        } else if (getLobbyPlayers().size() <= 0 && getLobbyState() != Lobby.LobbyState.PRE_GAME) {
             endMatch();
         }
     }
