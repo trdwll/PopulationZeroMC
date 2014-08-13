@@ -19,6 +19,10 @@ public class ZombieSpawnerData extends LocationSerialized {
     public Zombie spawnZombie() {
         Zombie zombie = isPigZombie ? getLocation().getWorld().spawn(getLocation(), PigZombie.class) : getLocation().getWorld().spawn(getLocation(), Zombie.class);
 
+        if (zombie instanceof PigZombie) {
+            ((PigZombie) zombie).setAnger(Integer.MAX_VALUE);
+        }
+
         // TODO: Custom armour?
 
         return zombie;

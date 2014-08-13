@@ -40,8 +40,6 @@ public class MatchScoreboard {
         objective.setDisplayName(Utils.translate("&8[&3Countdown&8]"));
     }
 
-
-
     public void setCount(int count) {
         if (count == 0) {
             scoreboard.resetScores("Time to Match:");

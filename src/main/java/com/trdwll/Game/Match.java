@@ -22,6 +22,7 @@ public class Match {
 
     private Map<UUID, Entity> spawnedEntities;
 
+    private Random random = new Random();
     private int scheduleId = -1;
 
     public Match(Lobby lobby) {
@@ -56,10 +57,15 @@ public class Match {
     }
 
     public void onPlayerJoin(Player player) {
-        if (getMatchState() == MatchState.PRE_MATCH) {
+        if (getMatchState() != MatchState.PRE_MATCH) {
             player.teleport(getLobby().getMapDetails().getGameSpawn());
             player.setGameMode(GameMode.SURVIVAL);
             Utils.clearInventory(player);
+
+            if (player.hasPermission("pzm.dev"))
+                KitStorage.giveKit(player, 4);
+            else
+                KitStorage.giveKit(player, random.nextInt(3));
         }
 
         getScoreboard().onPlayerJoin(player);
@@ -68,8 +74,6 @@ public class Match {
     public void startMatch() {
         if (!hasStarted()) {
             setMatchState(MatchState.IN_MATCH);
-
-            Random random = new Random();
 
             for (Player matchPlayer : getLobby().getLobbyPlayers()) {
                 matchPlayer.teleport(getLobby().getMapDetails().getGameSpawn());
