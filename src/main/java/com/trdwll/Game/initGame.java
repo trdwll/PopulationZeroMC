@@ -38,7 +38,7 @@ public class initGame extends JavaPlugin {
         lobbies = new HashMap<String, Lobby>();
         // spawn = new Location(getServer().getWorld("world"), 2322, 4, -261);
         commandRegistry = new CommandRegistry();
-        settings = GsonFileUtils.loadSettingsFromFile("GeneralSettings.json", true);
+        settings = GsonFileUtils.loadSettingsFromFile("GeneralSettings.json", false);
 
         try {
             this.getServer().getPluginManager().registerEvents(new initEngine(this), this);
