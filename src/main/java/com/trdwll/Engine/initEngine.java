@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
@@ -35,11 +36,13 @@ public class initEngine implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent e) throws InterruptedException {
 		Player p = e.getPlayer();
 		String pname = p.getName();
-		
+
+        e.setJoinMessage("");
 		p.teleport(plugin.getSettings().getSpawn());
+        p.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
 		
-		Bukkit.broadcastMessage(Utils.prefixDefault + "Welcome " + ChatColor.RED + pname + ChatColor.RESET + " to " + Utils.modName + "!");
-		p.sendMessage(Utils.prefixDefault + "Use /pzm help to get help!");
+		Bukkit.broadcastMessage(Utils.prefixDefault + " Welcome " + ChatColor.RED + pname + ChatColor.RESET + " to " + Utils.modName + "!");
+		p.sendMessage(Utils.prefixDefault + " Use /pzm help to get help!");
 	}
 	
 	@EventHandler (priority = EventPriority.LOWEST)
@@ -54,6 +57,14 @@ public class initEngine implements Listener {
             if (lobby.removePlayerFromLobby(event.getEntity()))
                 event.getDrops().clear();
     }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+     public void onPlayerLeave(PlayerQuitEvent event) {
+        for (Lobby lobby : plugin.getLobbies())
+            lobby.removePlayerFromLobby(event.getPlayer());
+
+        event.setQuitMessage("");
+    }
 	 
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onWeatherChange(WeatherChangeEvent event) {
@@ -63,7 +74,7 @@ public class initEngine implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        if (event.getMessage().equalsIgnoreCase("/?") || event.getMessage().equalsIgnoreCase("?")) {
+        if (!event.getPlayer().isOp() && (event.getMessage().equalsIgnoreCase("/?") || event.getMessage().equalsIgnoreCase("?"))) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(Utils.translate("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is an error."));
         }

@@ -79,20 +79,27 @@ public class Lobby implements Listener {
 
     public boolean removePlayerFromLobby(Player player) {
         if (getLobbyPlayers().contains(player)) {
-            getLobbyPlayers().remove(player);
+            if (player.isOnline()) {
+                getLobbyPlayers().remove(player);
 
-            if (match != null) {
-                Utils.clearInventory(player);
-                match.getScoreboard().onPlayerLeave(player);
+                if (match != null) {
+                    Utils.clearInventory(player);
+                    match.getScoreboard().onPlayerLeave(player);
+                }
+
+                player.teleport(getPlugin().getSettings().getSpawn());
+                player.sendMessage(Messages.getTeleportedToSpawn());
+                player.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
+
+                checkLobbyStatus();
+
+                return getLobbyState() != LobbyState.IN_GAME;
+            } else {
+                if (match != null)
+                    match.getScoreboard().onPlayerLeave(player);
+
+                checkLobbyStatus();
             }
-
-            player.teleport(getPlugin().getSettings().getSpawn());
-            player.sendMessage(Messages.getTeleportedToSpawn());
-            checkLobbyStatus();
-
-            player.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
-
-            return getLobbyState() != LobbyState.IN_GAME;
         }
 
         return false;
