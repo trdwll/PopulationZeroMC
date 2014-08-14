@@ -1,9 +1,6 @@
 package com.trdwll.Game;
 
-import com.trdwll.Engine.KitStorage;
-import com.trdwll.Engine.Lobby;
-import com.trdwll.Engine.MatchScoreboard;
-import com.trdwll.Engine.ZombieSpawnerData;
+import com.trdwll.Engine.*;
 import com.trdwll.Utilities.Utils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -21,6 +18,10 @@ public class Match {
     private MatchScoreboard scoreboard;
 
     private Map<UUID, Entity> spawnedEntities;
+
+    private Map<String, Integer> roundSpawnAddition;
+    private Map<String, Integer> zombieSpawnCount;
+
 
     private Random random = new Random();
     private int scheduleId = -1;
@@ -96,12 +97,11 @@ public class Match {
 
                 int round = 1;
                 int wave = 1;
-                int roundAddition = 0;
-
-                int zombieCount = getLobby().getMapDetails().getStartZombieSpawnCount();
 
                 @Override
                 public void run() {
+
+                    boolean newRound = false;
 
                     if (getMatchState() != MatchState.IN_MATCH) {
                         getLobby().getPlugin().getServer().getScheduler().cancelTask(scheduleId);
@@ -110,22 +110,15 @@ public class Match {
                     }
 
                     if (wave % getLobby().getMapDetails().getWavesPerRound() == 0 || wave == 1) {
-                        getLobby().sendPlayersMessage("Round " + (round ++) + " Has Begun!");
+                        getLobby().sendPlayersMessage("Round " + (round++) + " Has Begun!");
 
-                        roundAddition += getLobby().getMapDetails().getRoundSpawnAddition();
-                        zombieCount += roundAddition;
+                        newRound = true;
                     }
 
-                    if (getLobby().getMapDetails().getMaxZombieSpawnCount() != -1 && zombieCount > getLobby().getMapDetails().getMaxZombieSpawnCount())
-                        zombieCount = getLobby().getMapDetails().getMaxZombieSpawnCount();
-
                     if (spawnedEntities.size() < getLobby().getMapDetails().getMaxZombieSpawnCount())
-                        spawnWave(zombieCount);
-
-                    zombieCount += getLobby().getMapDetails().getZombieIncrementalCount();
+                        spawnWave(newRound);
 
                     getLobby().sendPlayersMessage("Wave " + (wave ++) + " Inbound!");
-
                     getScoreboard().update(wave - 1, round - 1, spawnedEntities.values());
                 }
 
@@ -153,15 +146,23 @@ public class Match {
         getLobby().getPlugin().getServer().getScheduler().cancelTask(scheduleId);
     }
 
-    public void spawnWave(int zombieAmount) {
-        int zombiesPerSpawn = getLobby().getMapDetails().isZombieLocationSpread() ? zombieAmount / getLobby().getMapDetails().getZombieSpawnData().size() : zombieAmount;
+    public void spawnWave(boolean newRound) {
+        for (ZombieSpawnerData data : getLobby().getMapDetails().getZombieSpawnData()) {
+            if (!zombieSpawnCount.containsKey(data.getSpawnerId()))
+                zombieSpawnCount.put(data.getSpawnerId(), data.getStartZombieSpawnCount());
 
-        for (ZombieSpawnerData data : getLobby().getMapDetails().getZombieSpawnData())
-            for (int ignored = 0; ignored < zombiesPerSpawn; ignored ++) {
-                Entity entity = data.spawnZombie();
+            zombieSpawnCount.put(data.getSpawnerId(), zombieSpawnCount.get(data.getSpawnerId()) + data.getZombieIncrementalCount() + (newRound ? data.getRoundSpawnAddition() : 0));
 
-                spawnedEntities.put(entity.getUniqueId(), entity);
+            if (spawnedEntities.size() < getLobby().getMapDetails().getMaxZombieSpawnCount()) {
+                int zombieCount = getLobby().getMapDetails().getMaxZombieSpawnCount() < spawnedEntities.size() && getLobby().getMapDetails().getMaxZombieSpawnCount() != -1 + zombieSpawnCount.get(data.getSpawnerId()) ? getLobby().getMapDetails().getMaxZombieSpawnCount() - spawnedEntities.size() : zombieSpawnCount.get(data.getSpawnerId());
+
+                for (int ignored = 0; ignored < zombieCount; ignored ++) {
+                    Entity entity = data.spawnZombie();
+
+                    spawnedEntities.put(entity.getUniqueId(), entity);
+                }
             }
+        }
     }
 
     public void onEntityDeath(EntityDeathEvent event) {

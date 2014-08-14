@@ -1,8 +1,8 @@
 {
-    "mapName": "Dev Arena";
+    "mapName": "Dev Arena",
 
-    "minPlayers": 1;
-    "maxPlayers": 5;
+    "minPlayers": 1,
+    "maxPlayers": 5,
 
     "minX": 2391,
     "minY": 3,
@@ -11,14 +11,10 @@
     "maxY": 13,
     "maxZ": -284,
 
-    "isZombieLocationSpread": true;
-    "startZombieSpawnCount": 16;
-    "zombieIncrementalCount": 8,
-    "maxZombieSpawnCount": -1;
+    "maxZombieSpawnCount": -1,
 
     "waveDuration": 30,
     "wavesPerRound": 5,
-    "roundSpawnAddition": 5,
     "maxRounds": -1,
 
     "lobbySpawn": {
@@ -40,14 +36,20 @@
            "x": 2363,
            "y": 4,
            "z": -280,
-           "isPigZombie": true
+           "isPigZombie": true,
+           "startZombieSpawnCount": 16,
+           "zombieIncrementalCount": 8,
+           "roundSpawnAddition": 5
         },
         {
             "world": "world",
             "x": 2363,
             "y": 4,
             "z": -265,
-            "isPigZombie": false
+            "isPigZombie": false,
+            "startZombieSpawnCount": 16,
+            "zombieIncrementalCount": 8,
+            "roundSpawnAddition": 5
         }
     ]
 }

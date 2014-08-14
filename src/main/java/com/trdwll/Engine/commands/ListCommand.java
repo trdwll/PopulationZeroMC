@@ -22,7 +22,7 @@ public class ListCommand extends PZMCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "list", "info", "i" };
+        return new String[] { "list", "info", "i", "status" };
     }
 
     @Override

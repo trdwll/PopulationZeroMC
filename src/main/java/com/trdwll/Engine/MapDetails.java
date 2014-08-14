@@ -14,14 +14,10 @@ public class MapDetails {
     private int minX, minY, minZ;
     private int maxX, maxY, maxZ;
 
-    private boolean isZombieLocationSpread;
-    private int startZombieSpawnCount;
-    private int zombieIncrementalCount;
     private int maxZombieSpawnCount;
 
     private int waveDuration;
     private int wavesPerRound;
-    private int roundSpawnAddition;
     private int maxRounds;
 
 	private LocationSerialized lobbySpawn;
@@ -67,18 +63,6 @@ public class MapDetails {
         return maxZ;
     }
 
-    public boolean isZombieLocationSpread() {
-        return isZombieLocationSpread;
-    }
-
-    public int getStartZombieSpawnCount() {
-        return startZombieSpawnCount;
-    }
-
-    public int getZombieIncrementalCount() {
-        return zombieIncrementalCount;
-    }
-
     public int getMaxZombieSpawnCount() {
         return maxZombieSpawnCount;
     }
@@ -89,10 +73,6 @@ public class MapDetails {
 
     public int getWavesPerRound() {
         return wavesPerRound;
-    }
-
-    public int getRoundSpawnAddition() {
-        return roundSpawnAddition;
     }
 
     public int getMaxRounds() {

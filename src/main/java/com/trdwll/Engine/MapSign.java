@@ -15,7 +15,7 @@ public class MapSign extends LocationSerialized {
 
     public MapSign() { }
 
-    public MapSign(Location location, MapSignType signType) {
+    public MapSign(Location location, MapSignType signType, MapDetails details) {
         super(location);
 
         this.signType = signType;
@@ -59,18 +59,18 @@ public class MapSign extends LocationSerialized {
             return UNKNOWN;
         }
 
-        @EventHandler
+        /* @EventHandler
         public void onBlockPlace(BlockPlaceEvent event) {
             if (event.getBlock() != null && getType(event.getBlock()) != UNKNOWN)
                 getType(event.getBlock()).onSignPlace(event.getBlock());
         }
 
         private void onSignPlace(Block block) {
-            MapDetails mapDetails;
+            MapDetails mapDetails = null;
             String details = mapDetails.getMapName();
 
             initGame.getInstance().getSignRegistry().registerSign(new MapSign(block.getLocation(), this, details));
-        }
+        } */
 
         private static String stripColour(String string) {
             return ChatColor.stripColor(string);
