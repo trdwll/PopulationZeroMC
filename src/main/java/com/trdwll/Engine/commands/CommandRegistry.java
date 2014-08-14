@@ -30,7 +30,7 @@ public class CommandRegistry {
 
         registerCommand(new JoinCommand());
         registerCommand(new LeaveCommand());
-        registerCommand(new TestCommand());
+        registerCommand(new ListCommand());
     }
 
     public void registerCommand(PZMCommand command) {
@@ -47,11 +47,11 @@ public class CommandRegistry {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length == 1 && (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h") || args[0].equalsIgnoreCase("?") || args[0].equalsIgnoreCase("i") || args[0].equalsIgnoreCase("info"))) {
+        if (args.length == 1 && (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h") || args[0].equalsIgnoreCase("?"))) {
             sender.sendMessage(getHelp(1));
 
             return true;
-        } else if (args.length == 2 && (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h") || args[0].equalsIgnoreCase("?") || args[0].equalsIgnoreCase("i") || args[0].equalsIgnoreCase("info"))) {
+        } else if (args.length == 2 && (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h") || args[0].equalsIgnoreCase("?"))) {
             int page = 1;
 
             try {
@@ -61,7 +61,7 @@ public class CommandRegistry {
             sender.sendMessage(getHelp(page));
 
             return true;
-        } else if (args.length == 2 && (args[1].equalsIgnoreCase("help") || args[1].equalsIgnoreCase("h") || args[1].equalsIgnoreCase("?") || args[1].equalsIgnoreCase("i") || args[1].equalsIgnoreCase("info"))) {
+        } else if (args.length == 2 && (args[1].equalsIgnoreCase("help") || args[1].equalsIgnoreCase("h") || args[1].equalsIgnoreCase("?"))) {
             if (commands.containsKey(args[0].toLowerCase())) {
                 sender.sendMessage(commands.get(args[0].toLowerCase()).getHelp());
 
@@ -98,7 +98,7 @@ public class CommandRegistry {
 
         page = Math.min(page, commandList.size() / COMMANDS_PER_PAGE + 1) > 0 ? Math.min(page, commandList.size() / COMMANDS_PER_PAGE + 1) : 1;
 
-        help.add(Messages.getCommandHelp(page, pages));
+        help.add(Messages.getHelp("Command Help", page, pages));
 
         int helpLength = 1;
 

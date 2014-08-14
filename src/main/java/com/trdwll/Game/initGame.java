@@ -3,8 +3,7 @@ package com.trdwll.Game;
 import java.io.File;
 import java.util.*;
 
-import com.trdwll.Engine.GeneralSettings;
-import com.trdwll.Engine.Messages;
+import com.trdwll.Engine.*;
 import com.trdwll.Engine.commands.CommandRegistry;
 import com.trdwll.Utilities.GsonFileUtils;
 import net.minecraft.util.com.google.gson.Gson;
@@ -14,8 +13,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.trdwll.Engine.Lobby;
-import com.trdwll.Engine.initEngine;
 import com.trdwll.Utilities.Utils;
 
 public class initGame extends JavaPlugin {
@@ -24,6 +21,7 @@ public class initGame extends JavaPlugin {
 
     private Map<String, Lobby> lobbies;
     private CommandRegistry commandRegistry;
+    private MapSignRegistry signRegistry;
 
     private GeneralSettings settings;
 
@@ -38,10 +36,13 @@ public class initGame extends JavaPlugin {
         lobbies = new HashMap<String, Lobby>();
         // spawn = new Location(getServer().getWorld("world"), 2322, 4, -261);
         commandRegistry = new CommandRegistry();
+        signRegistry = new MapSignRegistry();
         settings = GsonFileUtils.loadSettingsFromFile("GeneralSettings.json", false);
 
         try {
-            this.getServer().getPluginManager().registerEvents(new initEngine(this), this);
+            getServer().getPluginManager().registerEvents(new initEngine(this), this);
+            getServer().getPluginManager().registerEvents(MapSign.MapSignType.UNKNOWN, this);
+
             System.out.print(Utils.prefixOk + "Successful startup!");
         }
         catch (Exception e) {
@@ -61,6 +62,10 @@ public class initGame extends JavaPlugin {
             }
 
         }, 20, 20);
+    }
+
+    public MapSignRegistry getSignRegistry() {
+        return signRegistry;
     }
 
     public GeneralSettings getSettings() {

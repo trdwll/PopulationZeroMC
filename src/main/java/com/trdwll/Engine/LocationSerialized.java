@@ -21,4 +21,20 @@ public class LocationSerialized {
         return Bukkit.getWorld(world) != null ? new Location(Bukkit.getWorld(world), x, y, z) : null;
     }
 
+    public String getWorld() {
+        return world;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
 }

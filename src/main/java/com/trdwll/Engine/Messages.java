@@ -22,12 +22,12 @@ public class Messages {
         return message.replace("%prefix%", prefixType.getPrefix().substring(0, Math.max(0, prefixType.getPrefix().length() - 1)));
     }
 
-    public static String getCommandHelp(int page, int pages) {
-        return getCommandHelp(Utils.PrefixType.DEFAULT, page, pages);
+    public static String getHelp(String help, int page, int pages) {
+        return getHelp(Utils.PrefixType.DEFAULT, help, page, pages);
     }
 
-    public static String getCommandHelp(Utils.PrefixType prefixType, int page, int pages) {
-        return Utils.translate(addPrefix(prefixType, plugin.getConfig().getString("Messages.CommandHelp", "%prefix% &3Command Help &8(&3Page &b%page% &8/ &b%pages%&8):").replace("%page%", String.valueOf(page)).replace("%pages%", String.valueOf(pages))));
+    public static String getHelp(Utils.PrefixType prefixType, String help, int page, int pages) {
+        return Utils.translate(addPrefix(prefixType, plugin.getConfig().getString("Messages.Help", "%prefix% &3%help% &8(&3Page &b%page% &8/ &b%pages%&8):").replace("%help%", help).replace("%page%", String.valueOf(page)).replace("%pages%", String.valueOf(pages))));
     }
 
     public static String getHelpFormat(String help, String command) {

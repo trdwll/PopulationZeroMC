@@ -25,4 +25,5 @@ permissions:
   pzm.player:
     children:
       pzm.join: true
+      pzm.list: true
     default: true

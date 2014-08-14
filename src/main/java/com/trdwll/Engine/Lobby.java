@@ -144,9 +144,11 @@ public class Lobby implements Listener {
 
                 @Override
                 public void run() {
-                    if (match != null && !match.hasStarted())
+                    if (match != null && !match.hasStarted()) {
+                        setLobbyState(LobbyState.IN_GAME);
+
                         match.startMatch();
-                    else
+                    } else
                         getPlugin().getServer().getScheduler().cancelTask(scheduleId);
                 }
 
