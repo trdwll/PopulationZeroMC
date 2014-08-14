@@ -37,9 +37,9 @@
            "y": 4,
            "z": -280,
            "isPigZombie": true,
-           "startZombieSpawnCount": 16,
-           "zombieIncrementalCount": 8,
-           "roundSpawnAddition": 5
+           "startZombieSpawnCount": 8,
+           "zombieIncrementalCount": 4,
+           "roundSpawnAddition": 3
         },
         {
             "world": "world",
@@ -47,9 +47,9 @@
             "y": 4,
             "z": -265,
             "isPigZombie": false,
-            "startZombieSpawnCount": 16,
-            "zombieIncrementalCount": 8,
-            "roundSpawnAddition": 5
+            "startZombieSpawnCount": 8,
+            "zombieIncrementalCount": 4,
+            "roundSpawnAddition": 3
         }
     ]
 }
