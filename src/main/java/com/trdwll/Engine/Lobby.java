@@ -125,7 +125,7 @@ public class Lobby implements Listener {
 
             countdownId = getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(getPlugin(), new Runnable() {
 
-                private int countdown = 10;
+                private int countdown = 45;
 
                 @Override
                 public void run() {
@@ -133,12 +133,12 @@ public class Lobby implements Listener {
                         match.setExpCountdown(countdown);
                         match.getScoreboard().setCount(countdown);
 
-                        sendPlayersMessage((countdown--) + " SECONDS TILL START!");
+                       sendPlayersMessage((countdown--) + " SECONDS UNTIL MATCH STARTS!!");
                     } else
                         getPlugin().getServer().getScheduler().cancelTask(countdownId);
                 }
 
-            }, 0, 20);
+            }, 0, 20); // 20;
 
             scheduleId = getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
 
@@ -152,7 +152,7 @@ public class Lobby implements Listener {
                         getPlugin().getServer().getScheduler().cancelTask(scheduleId);
                 }
 
-            }, 200);
+            }, 890); // 200
         } else if (getLobbyPlayers().size() <= 0 && getLobbyState() != Lobby.LobbyState.PRE_GAME) {
             endMatch();
         }

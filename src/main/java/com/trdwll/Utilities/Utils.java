@@ -21,9 +21,6 @@ public class Utils {
 	public static final String prefixError = ChatColor.WHITE + "[" + ChatColor.RED + "PZM" + ChatColor.WHITE + "]" + ChatColor.WHITE;
 	public static final String prefixDebug = translate("&f[&4DEBUG&f]");
 	public static final String modName = ChatColor.AQUA + "Population Zero Mod" + ChatColor.RESET;
-	public static final String HelpMenu = ChatColor.WHITE + "[" + ChatColor.BLUE + "PZM" + ChatColor.WHITE + "]" + ChatColor.AQUA + " === Help Menu ===\n" + ChatColor.WHITE +  "/pzm help - help\n/pzm join - join game\n/pzm leave - leave game\n/pzm start - start game";
-	public static final String KitMenu = ChatColor.WHITE + "[" + ChatColor.BLUE + "PZM" + ChatColor.WHITE + "]" + ChatColor.AQUA + " === Kit Menu ===\n" + ChatColor.WHITE +  "/pzm kit noob\n/pzm kit elite\n/pzm kit veteran\n/pzm kit god\n/pzm kit dev";
-	public static final String AboutMenu = ChatColor.WHITE + "[" + ChatColor.BLUE + "PZM" + ChatColor.WHITE + "]" + ChatColor.AQUA + " === Population Zero Mod ===\nVersion: " + Version + "\nLead Programmer - Twitter/@trdwll\nLead Programmer - Twitter/@OhYea777\nProgrammer - Twitter/@parkbully3\nQA Tester - Twitter/@dalton_test";
 
     private static Gson gson;
 

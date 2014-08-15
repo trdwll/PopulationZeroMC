@@ -56,7 +56,7 @@ public class initGame extends JavaPlugin {
             @Override
             public void run() {
                 for (World world : getServer().getWorlds()) {
-                    if (world.getTime() < 14000 || world.getTime() >= 22000)
+                    if (world.getTime() < 0 || world.getTime() >= 22000)
                         world.setTime(14000);
                 }
             }

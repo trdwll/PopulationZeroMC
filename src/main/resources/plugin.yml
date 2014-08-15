@@ -1,7 +1,7 @@
 name: Population_Zero_Mod
 main: com.trdwll.Game.initGame
 version: 0.1
-authors: [OhYea777,trdwll,parkbully]
+authors: [OhYea777,trdwll]
 
 commands:
    pzm:

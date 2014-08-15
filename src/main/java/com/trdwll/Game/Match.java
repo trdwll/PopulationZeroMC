@@ -118,7 +118,7 @@ public class Match {
                     if (getLobby().getMapDetails().getMaxZombieSpawnCount() == -1 || spawnedEntities.size() < getLobby().getMapDetails().getMaxZombieSpawnCount())
                         spawnWave(newRound);
 
-                    getLobby().sendPlayersMessage("Wave " + (wave ++) + " Inbound!");
+                    getLobby().sendPlayersMessage("Wave " + (wave++) + " Inbound!");
                     getScoreboard().update(wave - 1, round - 1, spawnedEntities.values());
                 }
 

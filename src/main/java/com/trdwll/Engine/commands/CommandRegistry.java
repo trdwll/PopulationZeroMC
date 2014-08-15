@@ -64,11 +64,9 @@ public class CommandRegistry {
         } else if (args.length == 2 && (args[1].equalsIgnoreCase("help") || args[1].equalsIgnoreCase("h") || args[1].equalsIgnoreCase("?"))) {
             if (commands.containsKey(args[0].toLowerCase())) {
                 sender.sendMessage(commands.get(args[0].toLowerCase()).getHelp());
-
                 return true;
             } else {
                 sender.sendMessage(Messages.getInvalidCommand());
-
                 return true;
             }
         } else if (args.length >= 1 && !args[0].equalsIgnoreCase("about")) {
@@ -77,17 +75,17 @@ public class CommandRegistry {
                     return commands.get(args[0].toLowerCase()).onCommand(sender, cmd, label, args);
                 else {
                     sender.sendMessage(Messages.getNoPermission());
-
                     return true;
                 }
             else {
                 sender.sendMessage(Messages.getInvalidCommand());
-
                 return true;
             }
         }
 
-        sender.sendMessage(new String[] { Utils.translate(Messages.addPrefix("%prefix% &3About&8:")), Messages.getHelpFormat("Lead Programmer", "@trdwll | Twitter"), Messages.getHelpFormat("Lead Programmer", "@OhYea777 | BukkitDev"), Messages.getHelpFormat("Programmer", "@parkbully3 | Twitter"), Messages.getHelpFormat("QA Tester", "@dalton_test | Twitter") });
+        sender.sendMessage(new String[] { Utils.translate(Messages.addPrefix("%prefix% &3About&8:")),
+                Messages.getHelpFormat("Lead Programmer", "ww.byteserver.net"),
+                Messages.getHelpFormat("Lead Programmer", "@OhYea777 | BukkitDev")});
 
         return true;
     }
